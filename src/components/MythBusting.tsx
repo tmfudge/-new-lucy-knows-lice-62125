@@ -3,34 +3,40 @@ import React from 'react';
 const MythBusting: React.FC = () => {
   const myths = [
     {
-      title: '"Lice Repellent" Shampoos',
-      myth: 'Tea tree oil, rosemary, lavender prevent lice',
-      reality: 'Zero scientific evidence. Lice don\'t care about aromatherapy. If this worked, why do schools still have outbreaks?'
+      title: 'Lice Only Infest Dirty Hair',
+      myth: 'Poor hygiene causes lice infestations',
+      reality: 'FACT: Lice prefer CLEAN hair because it\'s easier to grip and move around. Anyone can get lice regardless of hygiene. This affects the cleanest families.',
+      icon: '🧼'
     },
     {
-      title: 'Home "Suffocation" Methods',
-      myth: 'Mayonnaise, olive oil, Vaseline kill lice',
-      reality: 'Research shows little to no scientific support. Lice can hold their breath for HOURS. You just waste time while they multiply.'
+      title: 'Mayonnaise and Home Remedies Work',
+      myth: 'Kitchen ingredients can suffocate lice',
+      reality: 'FACT: Mayonnaise is porous and takes up to 8 hours to suffocate lice, making it ineffective and messy. Research shows little to no scientific support for most home remedies.',
+      icon: '🥄'
     },
     {
-      title: 'Drugstore "Super Strength" Treatments',
-      myth: 'Stronger chemicals = better results',
-      reality: 'Up to 65% failure rate due to resistance. You\'re using harsh chemicals on your child\'s scalp for nothing.'
+      title: 'Over-the-Counter Treatments Always Work',
+      myth: 'Drugstore treatments are reliable solutions',
+      reality: 'FACT: Up to 65% of head lice have developed resistance to common OTC pyrethroid treatments, leading to treatment failures and persistent infestations.',
+      icon: '💊'
     },
     {
-      title: 'Plastic "Lice Combs"',
-      myth: 'Any fine-tooth comb works the same',
-      reality: 'Plastic combs miss 80% of eggs. They\'re too flexible to grip nits properly. You need metal teeth for proper removal.'
+      title: 'Cutting Hair Short Eliminates Lice',
+      myth: 'Short hair prevents or cures lice',
+      reality: 'FACT: Hair length does not prevent lice; eggs are glued close to the scalp regardless of length. Proper combing and treatment are essential.',
+      icon: '✂️'
     },
     {
-      title: '"Natural" Heat Treatments',
-      myth: 'Hair dryers and flat irons kill lice',
-      reality: 'You\'ll burn your child\'s scalp before reaching temperatures that kill lice eggs. Dangerous and ineffective.'
+      title: 'Special Products Can Prevent Lice',
+      myth: 'Preventative shampoos and sprays work',
+      reality: 'FACT: No scientifically proven preventative treatments exist. Prevention relies on early detection and proper treatment protocols.',
+      icon: '🛡️'
     },
     {
-      title: 'Vinegar "Egg Dissolving" Treatment',
-      myth: 'Acid dissolves the glue holding nits to hair',
-      reality: 'Old wives\' tale with zero scientific backing. Nits are designed to survive everything - including your kitchen pantry.'
+      title: 'All Suspected Cases Are Actually Lice',
+      myth: 'If you think it\'s lice, it probably is',
+      reality: 'FACT: Only about 57.5% of suspected lice cases are correctly identified, causing confusion and ineffective treatments for nearly half of all cases.',
+      icon: '🔍'
     }
   ];
 
@@ -41,25 +47,25 @@ const MythBusting: React.FC = () => {
           STOP Falling for These Expensive Lies
         </h2>
         <p className="text-xl text-orange-500 text-center mb-12 font-semibold">
-          The $50 million "lice prevention" industry is built on myths that keep you buying products that DON'T WORK
+          The $50 million "lice treatment" industry is built on myths that keep you buying products that DON'T WORK
         </p>
 
         {/* Research Alert */}
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
           <div className="flex items-center mb-4">
             <div className="text-3xl mr-4">🚨</div>
-            <h3 className="text-xl font-bold text-red-800">Research Alert: Why Most Treatments Fail</h3>
+            <h3 className="text-xl font-bold text-red-800">What Research Actually Shows</h3>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white p-4 rounded-lg border border-red-300">
-              <h4 className="font-bold text-red-700 mb-2">The Resistance Problem:</h4>
+              <h4 className="font-bold text-red-700 mb-2">The Treatment Failure Problem:</h4>
               <p className="text-red-600 text-sm">
                 <strong>Up to 65% of head lice</strong> have developed resistance to common over-the-counter 
                 pyrethroid treatments, leading to treatment failures and persistent infestations.
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg border border-red-300">
-              <h4 className="font-bold text-red-700 mb-2">The Identification Problem:</h4>
+              <h4 className="font-bold text-red-700 mb-2">The Misidentification Problem:</h4>
               <p className="text-red-600 text-sm">
                 <strong>Only about 57.5%</strong> of suspected lice cases are correctly identified, 
                 causing confusion and ineffective treatments for nearly half of all cases.
@@ -71,15 +77,43 @@ const MythBusting: React.FC = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {myths.map((myth, index) => (
             <div key={index} className="bg-white p-8 rounded-3xl shadow-lg border-l-4 border-red-500 hover:-translate-y-2 transition-transform duration-300">
-              <h3 className="text-red-500 font-bold text-xl mb-4">❌ {myth.title}</h3>
+              <div className="text-4xl mb-4 text-center">{myth.icon}</div>
+              <h3 className="text-red-500 font-bold text-xl mb-4">❌ MYTH: {myth.title}</h3>
               <p className="text-gray-600 mb-4">
-                <strong>The Myth:</strong> {myth.myth}
+                <strong>People Think:</strong> {myth.myth}
               </p>
               <p className="text-gray-800 font-semibold">
-                <strong>The Reality:</strong> {myth.reality}
+                <strong>{myth.reality}</strong>
               </p>
             </div>
           ))}
+        </div>
+
+        {/* Research-Based Reality Check */}
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+          <h3 className="text-xl font-bold text-blue-800 mb-4 text-center">
+            What Parents Need to Know (Based on Research)
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-bold text-blue-700 mb-3">❌ DON'T Do This (Research Shows These Fail):</h4>
+              <ul className="text-blue-600 space-y-2 text-sm">
+                <li>• Don't panic or overreact - stress makes everything harder</li>
+                <li>• Don't rely on home remedies like mayonnaise or oils - they're ineffective</li>
+                <li>• Don't hide infestations due to stigma - open communication helps prevent spread</li>
+                <li>• Don't assume drugstore treatments will work - 65% resistance rate</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold text-blue-700 mb-3">✅ DO This Instead (Evidence-Based Approach):</h4>
+              <ul className="text-blue-600 space-y-2 text-sm">
+                <li>• Remember: lice don't spread disease - they're a nuisance, not a health hazard</li>
+                <li>• Get proper identification first - avoid the 42.5% misdiagnosis rate</li>
+                <li>• Use systematic wet combing with quality tools</li>
+                <li>• Follow proven protocols that address the complete lifecycle</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         {/* What Actually Works */}

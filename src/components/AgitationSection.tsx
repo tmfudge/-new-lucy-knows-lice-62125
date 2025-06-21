@@ -95,21 +95,25 @@ const AgitationSection: React.FC = () => {
             <h4 className="text-xl font-bold text-red-800 mb-4">What Research Actually Shows:</h4>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <h5 className="font-bold text-gray-800 mb-2">❌ What DOESN'T Work:</h5>
+                <h5 className="font-bold text-gray-800 mb-2">❌ What DOESN'T Work (Science-Backed):</h5>
                 <ul className="text-gray-700 space-y-1 text-sm">
                   <li>• Mayonnaise and oils (no scientific support)</li>
-                  <li>• Most drugstore treatments (65% resistance rate)</li>
+                  <li>• Most drugstore treatments (up to 65% resistance rate)</li>
                   <li>• Heat treatments (dangerous and ineffective)</li>
-                  <li>• Hiding the problem (makes it worse)</li>
+                  <li>• Hiding the problem (makes spread worse)</li>
+                  <li>• Cutting hair short (eggs stay close to scalp)</li>
+                  <li>• Prevention products (no proven preventatives exist)</li>
                 </ul>
               </div>
               <div>
-                <h5 className="font-bold text-gray-800 mb-2">✅ What DOES Work:</h5>
+                <h5 className="font-bold text-gray-800 mb-2">✅ What DOES Work (Evidence-Based):</h5>
                 <ul className="text-gray-700 space-y-1 text-sm">
                   <li>• Proper identification (avoid the 42.5% error rate)</li>
                   <li>• Quality metal combs (systematic removal)</li>
                   <li>• Open communication (prevents spread)</li>
                   <li>• Staying calm (reduces family stress)</li>
+                  <li>• Systematic wet combing protocols</li>
+                  <li>• Early detection and proper treatment</li>
                 </ul>
               </div>
             </div>
