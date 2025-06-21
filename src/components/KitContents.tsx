@@ -92,7 +92,7 @@ const KitContents: React.FC<KitContentsProps> = ({ onPurchase }) => {
           </button>
           
           <p className="text-gray-600 font-medium">
-            ✓ Instant Download ✓ Works on Any Device ✓ 60-Day Guarantee
+            ✓ Instant Download ✓ Works on Any Device ✓ 14-Day Guarantee
           </p>
         </div>
       </div>
