@@ -20,16 +20,16 @@ import Disclaimer from '../components/Disclaimer';
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // Simulate purchase flow - in real app this would handle payment
+  // Simple Google Drive redirect for now
   const handlePurchase = () => {
-    // Here you would normally:
-    // 1. Process payment
-    // 2. Create user account
-    // 3. Send confirmation email
-    // 4. Redirect to portal
+    // Replace this URL with your actual Google Drive folder link
+    const googleDriveLink = "https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing";
     
-    // For demo, we'll just redirect to portal
-    navigate('/portal');
+    // Open in new tab so they don't lose your site
+    window.open(googleDriveLink, '_blank');
+    
+    // Optional: Also redirect to a thank you page
+    // navigate('/thank-you');
   };
 
   return (
