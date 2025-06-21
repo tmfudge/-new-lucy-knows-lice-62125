@@ -10,9 +10,10 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/terms" element={<Terms />} />
+        {/* All legal routes point to the same comprehensive Terms page */}
         <Route path="/privacy" element={<Terms />} />
         <Route path="/disclaimers" element={<Terms />} />
-        <Route path="/contact" element={<Terms />} />
+        <Route path="/legal" element={<Terms />} />
         {/* Portal route commented out - will reactivate when ready for portal launch */}
         {/* <Route path="/portal/*" element={<Portal />} /> */}
       </Routes>

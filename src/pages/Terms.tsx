@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, FileText, Shield, AlertTriangle, Mail } from 'lucide-react';
+import { ArrowLeft, FileText, Shield, AlertTriangle, Mail, Eye, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Terms: React.FC = () => {
@@ -15,8 +15,8 @@ const Terms: React.FC = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">Terms & Conditions</h1>
-          <p className="text-gray-600 mt-2">Last updated: January 2024</p>
+          <h1 className="text-3xl font-bold text-gray-900">Terms, Privacy & Legal Information</h1>
+          <p className="text-gray-600 mt-2">Last updated: January 2025</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-lg p-8 space-y-8">
@@ -130,6 +130,92 @@ const Terms: React.FC = () => {
             </div>
           </section>
 
+          {/* Privacy Policy */}
+          <section>
+            <div className="flex items-center mb-4">
+              <Eye className="w-6 h-6 text-purple-600 mr-3" />
+              <h2 className="text-xl font-bold text-gray-900">Privacy Policy</h2>
+            </div>
+            <div className="text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-800">Information We Collect</h3>
+              <p>We collect minimal information necessary to deliver your educational materials:</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Email address for product delivery and support</li>
+                <li>Payment information (processed securely by our payment processor)</li>
+                <li>Basic usage analytics to improve our educational content</li>
+              </ul>
+
+              <h3 className="text-lg font-semibold text-gray-800">How We Use Your Information</h3>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Deliver your purchased educational materials</li>
+                <li>Provide customer support when requested</li>
+                <li>Send important updates about your purchase</li>
+                <li>Improve our educational content and user experience</li>
+              </ul>
+
+              <h3 className="text-lg font-semibold text-gray-800">Information Sharing</h3>
+              <p>We do not sell, trade, or share your personal information with third parties except:</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Payment processors (for transaction processing only)</li>
+                <li>When required by law</li>
+                <li>With your explicit consent</li>
+              </ul>
+
+              <h3 className="text-lg font-semibold text-gray-800">Data Security</h3>
+              <p>We implement appropriate security measures to protect your personal information:</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Secure SSL encryption for all data transmission</li>
+                <li>Regular security audits and updates</li>
+                <li>Limited access to personal information</li>
+                <li>Secure data storage practices</li>
+              </ul>
+
+              <h3 className="text-lg font-semibold text-gray-800">Your Rights</h3>
+              <p>You have the right to:</p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Request access to your personal information</li>
+                <li>Request correction of inaccurate information</li>
+                <li>Request deletion of your personal information</li>
+                <li>Opt out of non-essential communications</li>
+              </ul>
+            </div>
+          </section>
+
+          {/* Disclaimers */}
+          <section>
+            <div className="flex items-center mb-4">
+              <AlertTriangle className="w-6 h-6 text-orange-600 mr-3" />
+              <h2 className="text-xl font-bold text-gray-900">Disclaimers</h2>
+            </div>
+            <div className="text-gray-700 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-800">Medical Disclaimer</h3>
+              <p>
+                This educational resource is not intended to provide medical advice, diagnosis, or treatment. 
+                Always consult with qualified healthcare professionals regarding any medical concerns or before 
+                making any decisions related to your health or the health of your family.
+              </p>
+
+              <h3 className="text-lg font-semibold text-gray-800">Educational Purpose</h3>
+              <p>
+                The information provided is for educational purposes only and represents a compilation of 
+                publicly available information about lice treatment methods. Individual results may vary 
+                significantly based on numerous factors.
+              </p>
+
+              <h3 className="text-lg font-semibold text-gray-800">No Professional Relationship</h3>
+              <p>
+                Purchase and use of this educational resource does not create a professional relationship 
+                between you and the creators. The content is provided "as is" without warranties of any kind.
+              </p>
+
+              <h3 className="text-lg font-semibold text-gray-800">External Links</h3>
+              <p>
+                Our educational materials may contain links to external websites. We are not responsible 
+                for the content, privacy practices, or availability of external sites.
+              </p>
+            </div>
+          </section>
+
           {/* Limitation of Liability */}
           <section>
             <h2 className="text-xl font-bold text-gray-900 mb-4">Limitation of Liability</h2>
@@ -138,6 +224,10 @@ const Terms: React.FC = () => {
                 To the fullest extent permitted by law, Lucy Knows Lice Survival Kit and its creators 
                 shall not be liable for any direct, indirect, incidental, special, or consequential 
                 damages resulting from the use or inability to use this educational resource.
+              </p>
+              <p>
+                Your sole remedy for dissatisfaction with the educational content is to request a 
+                refund within the 14-day guarantee period.
               </p>
             </div>
           </section>
@@ -150,7 +240,7 @@ const Terms: React.FC = () => {
             </div>
             <div className="text-gray-700 space-y-4">
               <p>
-                For questions about these terms, refund requests, or technical support with accessing your educational materials:
+                For questions about these terms, refund requests, privacy concerns, or technical support:
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="font-medium text-blue-800">Email Support:</p>
@@ -166,19 +256,15 @@ const Terms: React.FC = () => {
             </div>
           </section>
 
-          {/* Privacy Notice */}
+          {/* Updates to Terms */}
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Privacy & Data</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Updates to These Terms</h2>
             <div className="text-gray-700 space-y-4">
               <p>
-                We respect your privacy and only collect information necessary to deliver your educational materials:
+                We may update these terms from time to time. Changes will be posted on this page 
+                with an updated "Last modified" date. Continued use of our educational resource 
+                after changes constitutes acceptance of the updated terms.
               </p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Email address for product delivery and support</li>
-                <li>Payment information (processed securely by our payment processor)</li>
-                <li>We do not sell or share your personal information</li>
-                <li>You may request data deletion at any time</li>
-              </ul>
             </div>
           </section>
         </div>
