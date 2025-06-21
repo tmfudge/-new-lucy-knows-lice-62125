@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Award, Clock } from 'lucide-react';
+import { Star, Clock } from 'lucide-react';
 
 interface HeroProps {
   onPurchase: () => void;
@@ -77,7 +77,7 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
             YES! Give Me the REAL Solution
           </button>
           <div className="mt-4 text-green-600 font-semibold text-lg">
-            Instant Access • Just $27 • 30-Day Guarantee
+            Instant Access • Just $27 • 14-Day Guarantee
           </div>
         </div>
 
@@ -89,13 +89,6 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
               4.9/5 Stars
             </div>
             <div className="text-gray-600 text-sm">1,247+ Reviews</div>
-          </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center text-blue-600 font-bold">
-              <Award className="w-5 h-5 mr-1" />
-              Nurse Approved
-            </div>
-            <div className="text-gray-600 text-sm">School Health Pros</div>
           </div>
           <div className="text-center">
             <div className="flex items-center justify-center text-orange-500 font-bold">
@@ -117,25 +110,25 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
               {
                 icon: '⏰',
                 title: '"24 Hours - Done!"',
-                quote: 'Followed Lucy\'s plan exactly. Lice gone by the next morning. My kid was back at school Thursday.',
+                quote: 'Followed the plan exactly. Lice gone by the next morning. My kid was back at school Thursday.',
                 author: 'Karen M.'
               },
               {
                 icon: '💰',
                 title: '"Saved $400+"',
-                quote: 'Was about to book a $450 clinic visit. Lucy\'s method worked for $62 total. Incredible!',
+                quote: 'Was about to book a $450 clinic visit. This method worked for $62 total. Incredible!',
                 author: 'James & Lisa T.'
               },
               {
                 icon: '👨‍👩‍👧‍👦',
                 title: '"All 3 Kids Clear"',
-                quote: 'Triplets all got lice from daycare. Lucy\'s system cleared all three in 48 hours. No re-infection.',
+                quote: 'Triplets all got lice from daycare. This system cleared all three in 48 hours. No re-infection.',
                 author: 'Monica R.'
               },
               {
                 icon: '📚',
                 title: '"Back to School Fast"',
-                quote: 'Found lice Sunday night, needed clearance Monday. Lucy\'s emergency guide worked perfectly!',
+                quote: 'Found lice Sunday night, needed clearance Monday. This emergency guide worked perfectly!',
                 author: 'Rachel D.'
               }
             ].map((story, index) => (

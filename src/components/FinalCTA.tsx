@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lock, Smartphone, CheckCircle, UserCheck, Star, Award } from 'lucide-react';
+import { Lock, Smartphone, CheckCircle, Star } from 'lucide-react';
 
 interface FinalCTAProps {
   onPurchase: () => void;
@@ -9,17 +9,15 @@ const FinalCTA: React.FC<FinalCTAProps> = ({ onPurchase }) => {
   const trustSignals = [
     { icon: <Lock className="w-5 h-5" />, text: "Secure Checkout" },
     { icon: <Smartphone className="w-5 h-5" />, text: "Instant Access" },
-    { icon: <CheckCircle className="w-5 h-5" />, text: "30-Day Guarantee" },
-    { icon: <UserCheck className="w-5 h-5" />, text: "Expert Support" },
-    { icon: <Star className="w-5 h-5" />, text: "4.9/5 Stars" },
-    { icon: <Award className="w-5 h-5" />, text: "Nurse Approved" }
+    { icon: <CheckCircle className="w-5 h-5" />, text: "14-Day Guarantee" },
+    { icon: <Star className="w-5 h-5" />, text: "4.9/5 Stars" }
   ];
 
   const stats = [
     { icon: "📊", text: "98.7% Success Rate" },
     { icon: "⚡", text: "24-48 Hour Results" },
     { icon: "💬", text: "1,500+ Happy Parents" },
-    { icon: "🏆", text: "Pediatrician Recommended" }
+    { icon: "🏆", text: "Educational Resource" }
   ];
 
   return (
