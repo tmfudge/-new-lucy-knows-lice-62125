@@ -4,7 +4,7 @@ import { Heart, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 const PanicRelief: React.FC = () => {
   const panicScenarios = [
     {
-      time: "10:47 PM",
+      time: "2:00 AM",
       situation: "Just found lice on my kid",
       feeling: "Full panic mode",
       solution: "Emergency First Steps Guide calms you down in 5 minutes"
