@@ -5,7 +5,7 @@ const MythBusting: React.FC = () => {
     {
       title: 'Lice Only Infest Dirty Hair',
       myth: 'Poor hygiene causes lice infestations',
-      reality: 'FACT: Lice prefer CLEAN hair because it\'s easier to grip and move around. Anyone can get lice regardless of hygiene. This affects the cleanest families.',
+      reality: 'FACT: Lice can infest any hair regardless of cleanliness. They are equally comfortable on clean or dirty hair. Anyone can get lice - it has nothing to do with hygiene or parenting.',
       icon: '🧼'
     },
     {

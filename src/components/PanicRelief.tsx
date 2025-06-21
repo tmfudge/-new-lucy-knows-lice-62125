@@ -86,7 +86,7 @@ const PanicRelief: React.FC = () => {
               <CheckCircle className="w-12 h-12 text-blue-600 mx-auto mb-4" />
               <h4 className="text-xl font-bold text-blue-800 mb-2">You're Not Alone</h4>
               <p className="text-blue-700">
-                Research shows lice prefer CLEAN hair and affect families regardless of hygiene. This happens to the best families.
+                Lice affect families regardless of hygiene or cleanliness. This happens to the best families and has nothing to do with your parenting.
               </p>
             </div>
 
@@ -127,7 +127,7 @@ const PanicRelief: React.FC = () => {
                 </li>
                 <li className="flex items-center text-orange-700">
                   <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
-                  Lice prefer clean hair - this isn't about hygiene
+                  This isn't about hygiene or cleanliness
                 </li>
               </ul>
               <ul className="space-y-2">
