@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Clock } from 'lucide-react';
+import { Star, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 
 interface HeroProps {
   onPurchase: () => void;
@@ -11,26 +11,24 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
   };
 
   return (
-    <section className="bg-gradient-to-br from-orange-50 to-orange-100 py-12 md:py-16">
-      <div className="max-w-4xl mx-auto px-4 md:px-6">
-        {/* Logo */}
-        <div className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6 md:mb-8 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-blue-500 overflow-hidden">
+    <section className="bg-gradient-to-br from-orange-50 to-orange-100 py-8 md:py-12">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        {/* Compact Logo */}
+        <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-blue-500 overflow-hidden">
           <img 
             src="/Lucy Know Lice Logo 500x500.png" 
             alt="Lucy Knows Lice Logo" 
             className="w-full h-full object-contain"
             onError={(e) => {
-              // Fallback to text-based logo if image fails
               const target = e.target as HTMLImageElement;
               target.style.display = 'none';
               const parent = target.parentElement;
               if (parent) {
                 parent.innerHTML = `
                   <div class="text-center font-bold">
-                    <div class="text-orange-500 text-lg md:text-xl mb-1">LUCY</div>
-                    <div class="text-gray-700 text-sm md:text-base">KNOWS</div>
-                    <div class="text-green-600 text-lg md:text-xl mt-1">LICE</div>
-                    <div class="text-2xl md:text-3xl mt-2">🐛</div>
+                    <div class="text-orange-500 text-sm md:text-base mb-1">LUCY</div>
+                    <div class="text-gray-700 text-xs md:text-sm">KNOWS</div>
+                    <div class="text-green-600 text-sm md:text-base mt-1">LICE</div>
                   </div>
                 `;
               }
@@ -38,106 +36,132 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
           />
         </div>
 
-        {/* Main Headline */}
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-gray-800 text-center mb-4 md:mb-6 leading-tight px-2">
-          STOP! Before You Google "How to Get Rid of Lice"...
-        </h1>
-        
-        <p className="text-lg md:text-xl lg:text-2xl text-gray-600 text-center mb-6 md:mb-8 font-medium max-w-2xl mx-auto px-2">
-          You're About to Waste Hours, Stress Yourself Out, and Probably Make It Worse
-        </p>
-
-        {/* Benefits Box */}
-        <div className="bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-2xl mb-8 md:mb-10 max-w-2xl mx-auto border-t-4 border-green-500">
-          <h3 className="text-orange-500 text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center">
-            What if I told you there's a FASTER way?
-          </h3>
-          <ul className="space-y-3 md:space-y-4 text-base md:text-lg">
-            {[
-              'No more 3AM panic Googling sessions',
-              'Skip the $350+ lice clinic visits',
-              'Stop the failed drugstore treatments',
-              'Get your child back to school FAST',
-              'Learn the methods that work in 24-48 hours'
-            ].map((benefit, index) => (
-              <li key={index} className="flex items-start">
-                <span className="text-green-500 text-xl md:text-2xl font-bold mr-3 md:mr-4 mt-1 flex-shrink-0">✓</span>
-                <span className="text-gray-700">{benefit}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* CTA Button */}
-        <div className="text-center mb-6 md:mb-8">
-          <button 
-            onClick={onPurchase}
-            className="bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold py-4 md:py-6 px-6 md:px-10 rounded-full text-lg md:text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 uppercase tracking-wide w-full max-w-sm md:max-w-none md:w-auto"
-          >
-            YES! Give Me the REAL Solution
-          </button>
-          <div className="mt-3 md:mt-4 text-green-600 font-semibold text-base md:text-lg">
-            Instant Access • Just $27 • 14-Day Guarantee
-          </div>
-        </div>
-
-        {/* Trust Indicators */}
-        <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 mb-8 md:mb-12 text-sm md:text-base">
-          <div className="text-center">
-            <div className="flex items-center justify-center text-green-600 font-bold">
-              <Star className="w-4 h-4 md:w-5 md:h-5 mr-1" />
-              Highly Rated
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+          {/* Main Headline Section */}
+          <div className="lg:col-span-2">
+            {/* Attention-Grabbing Pre-Headline */}
+            <div className="bg-red-500 text-white px-4 py-2 rounded-full inline-block mb-4 font-bold text-sm md:text-base animate-pulse">
+              🚨 FOUND LICE? DON'T PANIC!
             </div>
-            <div className="text-gray-600 text-xs md:text-sm">User Reports</div>
-          </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center text-orange-500 font-bold">
-              <Clock className="w-4 h-4 md:w-5 md:h-5 mr-1" />
-              Fast Results
+
+            {/* Main Headline with Strong Visual Hierarchy */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
+              <span className="text-red-600">STOP!</span>{' '}
+              <span className="text-gray-800">Before You</span>{' '}
+              <span className="text-orange-500 underline decoration-4 decoration-orange-300">Google</span>{' '}
+              <span className="text-gray-800">"How to Get Rid of Lice"...</span>
+            </h1>
+            
+            {/* Subheadline */}
+            <p className="text-xl md:text-2xl lg:text-3xl text-gray-700 font-bold mb-6 leading-tight">
+              You're About to Waste <span className="text-red-600">Hours</span>, 
+              Stress Yourself Out, and Probably <span className="text-red-600">Make It Worse</span>
+            </p>
+
+            {/* Value Proposition */}
+            <div className="bg-white p-6 rounded-2xl shadow-xl mb-6 border-l-4 border-green-500">
+              <h3 className="text-orange-500 text-xl md:text-2xl font-bold mb-4">
+                What if there's a FASTER way that actually works?
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {[
+                  'Skip the $350+ lice clinic visits',
+                  'No more failed drugstore treatments',
+                  'Get your child back to school FAST',
+                  'Learn methods that work in 24-48 hours'
+                ].map((benefit, index) => (
+                  <div key={index} className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                    <span className="text-gray-700 font-medium">{benefit}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="text-gray-600 text-xs md:text-sm">Typical Timeline</div>
+
+            {/* Social Proof */}
+            <div className="flex items-center space-x-6 mb-6">
+              <div className="flex items-center">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <span className="ml-2 text-gray-700 font-semibold">1,000+ Parents Helped</span>
+              </div>
+              <div className="flex items-center text-green-600 font-bold">
+                <Clock className="w-5 h-5 mr-1" />
+                24-48 Hour Results
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Section */}
+          <div className="lg:col-span-1">
+            <div className="bg-white p-6 rounded-3xl shadow-2xl border-4 border-orange-500 relative">
+              {/* Urgency Badge */}
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg">
+                LIMITED TIME: 87% OFF
+              </div>
+              
+              <div className="text-center pt-4">
+                <div className="text-gray-400 line-through text-xl mb-2">$220</div>
+                <div className="text-5xl font-extrabold text-green-600 mb-2">$27</div>
+                <div className="text-orange-500 font-bold text-lg mb-6">Just $27 Today!</div>
+                
+                <button 
+                  onClick={onPurchase}
+                  className="w-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold py-4 px-6 rounded-full text-lg shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+                >
+                  YES! Give Me the REAL Solution
+                </button>
+                
+                <div className="text-green-600 font-semibold text-sm mb-4">
+                  ✓ Instant Access ✓ 14-Day Guarantee ✓ Works on Any Device
+                </div>
+
+                {/* Urgency Elements */}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                  <div className="flex items-center justify-center text-yellow-800 font-bold text-sm">
+                    <AlertTriangle className="w-4 h-4 mr-2" />
+                    Every hour you wait, lice multiply!
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Success Stories */}
-        <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 md:p-10 rounded-2xl md:rounded-3xl border-2 border-orange-200">
-          <h3 className="text-center text-orange-500 text-xl md:text-2xl font-bold mb-6 md:mb-8">
-            Real Results from Real Parents
+        {/* Quick Success Stories - Compact */}
+        <div className="mt-8 bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-2xl border border-green-200">
+          <h3 className="text-center text-green-700 text-lg font-bold mb-4">
+            Real Results from Real Parents (Just Like You)
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               {
                 icon: '⏰',
                 title: '"24 Hours - Done!"',
-                quote: 'Followed the plan exactly. Lice gone by the next morning. My kid was back at school Thursday.',
+                quote: 'Lice gone by next morning. Back at school Thursday.',
                 author: 'Karen M.'
               },
               {
                 icon: '💰',
                 title: '"Saved $400+"',
-                quote: 'Was about to book a $450 clinic visit. This method worked for $62 total. Incredible!',
-                author: 'James & Lisa T.'
+                quote: 'Was about to book $450 clinic. This worked for $62 total!',
+                author: 'James T.'
               },
               {
                 icon: '👨‍👩‍👧‍👦',
                 title: '"All 3 Kids Clear"',
-                quote: 'Triplets all got lice from daycare. This system cleared all three in 48 hours. No re-infection.',
+                quote: 'Triplets all had lice. Cleared all three in 48 hours.',
                 author: 'Monica R.'
-              },
-              {
-                icon: '📚',
-                title: '"Back to School Fast"',
-                quote: 'Found lice Sunday night, needed clearance Monday. This emergency guide worked perfectly!',
-                author: 'Rachel D.'
               }
             ].map((story, index) => (
-              <div key={index} className="bg-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-lg text-center">
-                <div className="text-2xl md:text-3xl mb-2 md:mb-3">{story.icon}</div>
-                <div className="font-bold text-base md:text-lg mb-2" style={{ color: index % 2 === 0 ? '#ff6b35' : '#38a169' }}>
-                  {story.title}
-                </div>
-                <div className="text-gray-600 text-sm mb-2">{story.quote}</div>
+              <div key={index} className="bg-white p-4 rounded-xl shadow-md text-center">
+                <div className="text-2xl mb-2">{story.icon}</div>
+                <div className="font-bold text-green-700 text-sm mb-1">{story.title}</div>
+                <div className="text-gray-600 text-xs mb-2">"{story.quote}"</div>
                 <div className="text-gray-500 text-xs">- {story.author}</div>
               </div>
             ))}
