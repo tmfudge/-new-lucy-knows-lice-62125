@@ -14,7 +14,7 @@ const MoneyBackGuarantee: React.FC = () => {
           <Shield className="w-20 h-20 text-green-600 mx-auto mb-6 mt-4" />
           
           <h2 className="text-4xl font-bold text-green-700 mb-6">
-            60-Day Satisfaction Promise
+            14-Day Satisfaction Promise
           </h2>
           
           <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -25,8 +25,8 @@ const MoneyBackGuarantee: React.FC = () => {
             </div>
             <div className="text-center">
               <Clock className="w-12 h-12 text-green-600 mx-auto mb-3" />
-              <h3 className="font-bold text-gray-800 mb-2">60 Full Days</h3>
-              <p className="text-gray-600">Plenty of time to review all materials</p>
+              <h3 className="font-bold text-gray-800 mb-2">14 Full Days</h3>
+              <p className="text-gray-600">Plenty of time to review all materials and see results</p>
             </div>
             <div className="text-center">
               <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-3" />
@@ -37,7 +37,7 @@ const MoneyBackGuarantee: React.FC = () => {
           
           <div className="bg-green-50 p-6 rounded-2xl border border-green-200 mb-6">
             <p className="text-xl text-green-800 font-semibold mb-4">
-              "If you're not completely satisfied with the educational content and resources in this survival kit, just email us within 60 days."
+              "If you're not completely satisfied with the educational content and resources in this survival kit, just email us within 14 days."
             </p>
             <p className="text-green-700">
               We'll refund every penny immediately. No forms, no hassles, no questions asked. 
