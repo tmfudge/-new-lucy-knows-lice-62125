@@ -47,7 +47,7 @@ const MythBusting: React.FC = () => {
           STOP Falling for These Expensive Lies
         </h2>
         <p className="text-xl text-orange-500 text-center mb-12 font-semibold">
-          The $50 million "lice treatment" industry is built on myths that keep you buying products that DON'T WORK
+          The $500 million "lice treatment" industry is built on myths that keep you buying products that DON'T WORK
         </p>
 
         {/* Research Alert */}
@@ -121,7 +121,7 @@ const MythBusting: React.FC = () => {
           <h3 className="text-3xl font-bold mb-6">Here's What Research Shows Actually Works:</h3>
           <p className="text-2xl mb-6">Proper identification + systematic wet combing + quality tools + follow-up protocols</p>
           <p className="text-xl mb-6 opacity-90">
-            <strong>The same evidence-based methods $200+ lice clinics use</strong> - but you can learn them for $27 and do it at home tonight.
+            <strong>The same evidence-based methods $350+ lice clinics use</strong> - but you can learn them for $27 and do it at home tonight.
           </p>
           
           <div className="bg-white bg-opacity-20 p-6 rounded-2xl">

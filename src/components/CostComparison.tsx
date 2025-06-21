@@ -5,11 +5,11 @@ const CostComparison: React.FC = () => {
   const alternatives = [
     {
       option: "Professional Lice Clinic",
-      cost: "$200-$450",
+      cost: "$350-$600",
       timeframe: "2-3 hours",
       pros: ["Professional service", "Usually effective"],
       cons: ["Extremely expensive", "Appointment required", "Same method you can learn", "No follow-up support"],
-      verdict: "Works but costs 15x more"
+      verdict: "Works but costs 20x more"
     },
     {
       option: "Drugstore Treatments",
@@ -82,11 +82,11 @@ const CostComparison: React.FC = () => {
                 </li>
                 <li className="flex justify-between">
                   <span>Professional clinic (desperation)</span>
-                  <span className="font-semibold">$300</span>
+                  <span className="font-semibold">$450</span>
                 </li>
                 <li className="flex justify-between border-t pt-2 font-bold text-red-600">
                   <span>Total Spent:</span>
-                  <span>$415</span>
+                  <span>$565</span>
                 </li>
               </ul>
             </div>
@@ -104,7 +104,7 @@ const CostComparison: React.FC = () => {
               
               <div className="mt-6 p-4 bg-red-50 rounded-lg border border-red-200">
                 <p className="text-red-800 font-semibold text-center">
-                  Average total cost: $500-$800
+                  Average total cost: $600-$900
                 </p>
                 <p className="text-red-600 text-center text-sm">
                   Plus weeks of stress and frustration
@@ -153,7 +153,7 @@ const CostComparison: React.FC = () => {
             <tbody>
               <tr className="border-t">
                 <td className="px-6 py-4 font-semibold">Professional Clinic</td>
-                <td className="px-6 py-4 text-center text-red-600 font-bold">$200-$450</td>
+                <td className="px-6 py-4 text-center text-red-600 font-bold">$350-$600</td>
                 <td className="px-6 py-4 text-center text-green-600">Generally Good</td>
                 <td className="px-6 py-4 text-center">Same day</td>
                 <td className="px-6 py-4 text-center text-red-600">None after visit</td>
@@ -187,14 +187,14 @@ const CostComparison: React.FC = () => {
         <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-10 rounded-3xl text-center">
           <DollarSign className="w-16 h-16 mx-auto mb-6" />
           <h3 className="text-3xl font-bold mb-6">
-            Save $400+ and Get Better Results
+            Save $500+ and Get Better Results
           </h3>
           <p className="text-2xl mb-6 opacity-90">
-            For less than the cost of a family dinner out, learn the same methods $300 clinics use
+            For less than the cost of a family dinner out, learn the same methods $450 clinics use
           </p>
           <div className="bg-white bg-opacity-20 p-6 rounded-2xl">
             <p className="text-xl font-semibold mb-4">
-              "I spent $450 at a clinic for my first kid. When my second got lice, this educational resource taught me the same method for $27. I felt so stupid for not finding this first!" 
+              "I spent $550 at a clinic for my first kid. When my second got lice, this educational resource taught me the same method for $27. I felt so stupid for not finding this first!" 
             </p>
             <p className="text-green-100">- Amanda K., Mother of 3</p>
             <div className="mt-4 text-green-100 text-sm">

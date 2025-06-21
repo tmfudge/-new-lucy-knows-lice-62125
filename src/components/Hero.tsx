@@ -55,7 +55,7 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
           <ul className="space-y-4 text-lg">
             {[
               'No more 3AM panic Googling sessions',
-              'Skip the $200+ lice clinic visits',
+              'Skip the $350+ lice clinic visits',
               'Stop the failed drugstore treatments',
               'Get your child back to school FAST',
               'Learn the methods that work in 24-48 hours'

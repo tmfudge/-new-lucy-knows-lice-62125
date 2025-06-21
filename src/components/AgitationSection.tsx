@@ -14,7 +14,7 @@ const AgitationSection: React.FC = () => {
     },
     {
       icon: '💸',
-      title: 'MISTAKE #3: The $200+ Clinic "Solution"',
+      title: 'MISTAKE #3: The $350+ Clinic "Solution"',
       description: 'Desperate parents spend hundreds at lice removal services. They work, but your wallet takes a massive hit for something you can handle at home.'
     },
     {
@@ -153,7 +153,7 @@ const AgitationSection: React.FC = () => {
             {[
               {
                 stars: '★★★★★',
-                quote: 'I wish I found this FIRST instead of wasting $200 on treatments that didn\'t work. This method cleared my twin boys in 24 hours!',
+                quote: 'I wish I found this FIRST instead of wasting $350 on treatments that didn\'t work. This method cleared my twin boys in 24 hours!',
                 author: 'Andrea M., Phoenix, AZ'
               },
               {

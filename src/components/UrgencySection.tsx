@@ -21,7 +21,7 @@ const UrgencySection: React.FC = () => {
     {
       icon: <DollarSign className="w-6 h-6" />,
       title: "Financial protection",
-      description: "Avoid the $200-400 professional treatment costs"
+      description: "Avoid the $350-$600 professional treatment costs"
     }
   ];
 

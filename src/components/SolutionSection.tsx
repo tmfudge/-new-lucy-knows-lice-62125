@@ -36,7 +36,7 @@ const SolutionSection: React.FC = () => {
             
             <p className="text-gray-700">
               I did what every panicked parent does - I Googled. Big mistake. I found 47 different "solutions," 
-              spent $200+ on treatments that failed, and nearly lost my mind in the process.
+              spent $350+ on treatments that failed, and nearly lost my mind in the process.
             </p>
             
             <p className="text-gray-700">
@@ -71,7 +71,7 @@ const SolutionSection: React.FC = () => {
 
             <p className="text-gray-800">
               <strong className="text-orange-500">So I went on a mission.</strong> I studied the research. 
-              I interviewed pediatric nurses. I learned what the $200+ lice clinics actually do. 
+              I interviewed pediatric nurses. I learned what the $350+ lice clinics actually do. 
               I discovered why mayonnaise fails (it's porous!), why drugstore treatments don\'t work 
               (resistance rates are through the roof), and why parents report such significant stress and anxiety.
             </p>
