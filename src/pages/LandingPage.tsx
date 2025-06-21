@@ -15,6 +15,7 @@ import UrgencySection from '../components/UrgencySection';
 import MoneyBackGuarantee from '../components/MoneyBackGuarantee';
 import FinalCTA from '../components/FinalCTA';
 import FloatingCharacter from '../components/FloatingCharacter';
+import Disclaimer from '../components/Disclaimer';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ const LandingPage: React.FC = () => {
       <UrgencySection />
       <MoneyBackGuarantee />
       <FinalCTA onPurchase={handlePurchase} />
+      <Disclaimer />
       <FloatingCharacter />
     </div>
   );
