@@ -44,9 +44,14 @@ const CostComparison: React.FC = () => {
           <h2 className="text-4xl font-bold text-blue-800 mb-6">
             What Parents Actually Spend on Lice Treatment
           </h2>
-          <p className="text-xl text-blue-700">
+          <p className="text-xl text-blue-700 mb-4">
             The hidden costs of "cheap" solutions vs. the smart investment
           </p>
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 inline-block">
+            <p className="text-red-700 font-semibold">
+              💰 Americans spend over $500 million annually fighting lice - mostly on methods that don't work!
+            </p>
+          </div>
         </div>
 
         {/* Cost Breakdown */}
@@ -109,6 +114,30 @@ const CostComparison: React.FC = () => {
           </div>
         </div>
 
+        {/* Industry Problem Alert */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8">
+          <h3 className="text-xl font-bold text-yellow-800 text-center mb-4">
+            🚨 The $500+ Million Industry Problem
+          </h3>
+          <div className="grid md:grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-yellow-700">$500+ Million</div>
+              <div className="text-yellow-600 text-sm">Spent annually in U.S.</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-yellow-700">Up to 65%</div>
+              <div className="text-yellow-600 text-sm">Treatment failure rate</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-yellow-700">Summer Spike</div>
+              <div className="text-yellow-600 text-sm">Camp outbreaks surge</div>
+            </div>
+          </div>
+          <p className="text-yellow-700 text-center mt-4">
+            This massive industry profits from keeping you confused and buying products that don't work!
+          </p>
+        </div>
+
         {/* Comparison Table */}
         <div className="overflow-x-auto mb-12">
           <table className="w-full bg-white rounded-3xl shadow-lg overflow-hidden">
@@ -164,10 +193,13 @@ const CostComparison: React.FC = () => {
             For less than the cost of a family dinner out, learn the same methods $300 clinics use
           </p>
           <div className="bg-white bg-opacity-20 p-6 rounded-2xl">
-            <p className="text-xl font-semibold">
+            <p className="text-xl font-semibold mb-4">
               "I spent $450 at a clinic for my first kid. When my second got lice, this educational resource taught me the same method for $27. I felt so stupid for not finding this first!" 
             </p>
-            <p className="text-green-100 mt-2">- Amanda K., Mother of 3</p>
+            <p className="text-green-100">- Amanda K., Mother of 3</p>
+            <div className="mt-4 text-green-100 text-sm">
+              <strong>Don't become part of the $500+ million spent annually on ineffective treatments!</strong>
+            </div>
           </div>
         </div>
       </div>

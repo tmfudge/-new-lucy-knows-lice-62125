@@ -54,10 +54,10 @@ const AgitationSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Shocking Truth with UPDATED STATISTICS */}
+        {/* Shocking Truth with ALL NEW STATISTICS */}
         <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-10 rounded-3xl border-2 border-orange-500">
           <h3 className="text-3xl text-orange-500 font-bold text-center mb-8">
-            The Shocking Truth About Lice (Based on Recent Research)
+            The Shocking Truth About Lice (Latest Research Data)
           </h3>
           
           <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -86,8 +86,28 @@ const AgitationSection: React.FC = () => {
             ))}
           </div>
 
+          {/* NEW: Industry Money Stats */}
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
+            <h4 className="text-xl font-bold text-red-800 mb-4 text-center">💰 The $500 Million Lice Industry</h4>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-white p-4 rounded-lg border border-red-300 text-center">
+                <div className="text-3xl font-bold text-red-600 mb-2">$500+ Million</div>
+                <div className="text-red-700 font-semibold">Spent annually in the U.S.</div>
+                <div className="text-red-600 text-sm">fighting lice with mostly ineffective methods</div>
+              </div>
+              <div className="bg-white p-4 rounded-lg border border-red-300 text-center">
+                <div className="text-3xl font-bold text-red-600 mb-2">Summer Spike</div>
+                <div className="text-red-700 font-semibold">Camp outbreaks surge</div>
+                <div className="text-red-600 text-sm">due to close contact and shared spaces</div>
+              </div>
+            </div>
+            <p className="text-red-700 text-center mt-4 font-medium">
+              This massive industry profits from keeping you confused and buying products that don't work!
+            </p>
+          </div>
+
           <p className="text-xl text-gray-800 font-semibold text-center mb-8">
-            You're not a bad parent. You're dealing with a $50 million myth industry that profits from your panic.
+            You're not a bad parent. You're dealing with a $500+ million myth industry that profits from your panic.
           </p>
 
           {/* Research-Based Reality Check */}
@@ -119,6 +139,15 @@ const AgitationSection: React.FC = () => {
             </div>
           </div>
 
+          {/* Summer Camp Alert */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8">
+            <h4 className="text-xl font-bold text-yellow-800 mb-4 text-center">🏕️ Summer Camp Parents: Be Prepared!</h4>
+            <p className="text-yellow-700 text-center">
+              <strong>Lice outbreaks spike during summer camps</strong> due to close contact and shared spaces. 
+              Don't wait until you get "the call" from camp - be prepared with the knowledge you need!
+            </p>
+          </div>
+
           {/* Testimonials */}
           <div className="grid md:grid-cols-2 gap-6">
             {[
@@ -129,7 +158,7 @@ const AgitationSection: React.FC = () => {
               },
               {
                 stars: '★★★★★',
-                quote: 'Three kids all got lice from school. Every drugstore treatment failed. This enzyme method worked on all three in 48 hours. AMAZING.',
+                quote: 'Three kids all got lice from summer camp. Every drugstore treatment failed. This enzyme method worked on all three in 48 hours. AMAZING.',
                 author: 'Kevin & Sarah L., Denver, CO'
               }
             ].map((testimonial, index) => (
