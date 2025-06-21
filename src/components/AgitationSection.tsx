@@ -54,7 +54,7 @@ const AgitationSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Shocking Truth with NEW STATISTICS */}
+        {/* Shocking Truth with UPDATED STATISTICS */}
         <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-10 rounded-3xl border-2 border-orange-500">
           <h3 className="text-3xl text-orange-500 font-bold text-center mb-8">
             The Shocking Truth About Lice (Based on Recent Research)
@@ -62,6 +62,11 @@ const AgitationSection: React.FC = () => {
           
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {[
+              { 
+                stat: '1 in 5', 
+                text: 'kids may be infested', 
+                subtext: 'at any given moment - that\'s 20% of all children!' 
+              },
               { 
                 stat: 'Up to 65%', 
                 text: 'of lice are now resistant', 
@@ -71,11 +76,6 @@ const AgitationSection: React.FC = () => {
                 stat: 'Only 57.5%', 
                 text: 'of suspected cases', 
                 subtext: 'are correctly identified - most parents are treating the wrong thing' 
-              },
-              { 
-                stat: 'Significant', 
-                text: 'stress & anxiety reported', 
-                subtext: 'by parents due to misinformation and repeated treatment failures' 
               }
             ].map((item, index) => (
               <div key={index} className="bg-white p-6 rounded-2xl shadow-lg text-center">
