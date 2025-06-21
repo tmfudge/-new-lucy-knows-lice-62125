@@ -13,7 +13,7 @@ import {
   Settings as SettingsIcon,
   X
 } from 'lucide-react';
-import { PortalSection } from '../../App';
+import { PortalSection } from '../../pages/Portal';
 
 interface SidebarProps {
   activeSection: PortalSection;
@@ -60,8 +60,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection, isOp
       `}>
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">L</span>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img 
+                src="/lucy-bug.png" 
+                alt="Lucy" 
+                className="w-8 h-8 object-contain"
+              />
             </div>
             <div>
               <h1 className="text-lg font-bold text-gray-800">Lucy's Portal</h1>
