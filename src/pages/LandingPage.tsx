@@ -6,7 +6,6 @@ import PanicRelief from '../components/PanicRelief';
 import AgitationSection from '../components/AgitationSection';
 import MythBusting from '../components/MythBusting';
 import SolutionSection from '../components/SolutionSection';
-import VideoTestimonials from '../components/VideoTestimonials';
 import CostComparison from '../components/CostComparison';
 import KitContents from '../components/KitContents';
 import ScientificBacking from '../components/ScientificBacking';
@@ -40,7 +39,6 @@ const LandingPage: React.FC = () => {
       <AgitationSection />
       <MythBusting />
       <SolutionSection />
-      <VideoTestimonials />
       <CostComparison />
       <KitContents onPurchase={handlePurchase} />
       <ScientificBacking />

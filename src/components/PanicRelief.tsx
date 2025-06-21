@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Clock, Phone, MessageCircle } from 'lucide-react';
+import { Heart, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const PanicRelief: React.FC = () => {
   const panicScenarios = [
@@ -57,52 +57,86 @@ const PanicRelief: React.FC = () => {
           ))}
         </div>
 
-        {/* Immediate Help Section */}
+        {/* Immediate Relief Section */}
         <div className="bg-white p-10 rounded-3xl shadow-2xl border-4 border-orange-500">
           <div className="text-center mb-8">
             <Heart className="w-16 h-16 text-orange-500 mx-auto mb-4" />
             <h3 className="text-3xl font-bold text-orange-700 mb-4">
-              Need Help RIGHT NOW?
+              Take a Deep Breath - You've Got This
             </h3>
             <p className="text-xl text-gray-700">
-              Don't suffer alone. Get immediate support while you're going through this.
+              Thousands of parents have been exactly where you are right now. Here's what they wish they knew.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div className="bg-blue-50 p-6 rounded-2xl border border-blue-200 text-center">
-              <MessageCircle className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h4 className="text-xl font-bold text-blue-800 mb-2">24/7 Chat Support</h4>
-              <p className="text-blue-700 mb-4">
-                Real humans who understand the panic. Get answers in minutes, not hours.
+              <CheckCircle className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+              <h4 className="text-xl font-bold text-blue-800 mb-2">You're Not Alone</h4>
+              <p className="text-blue-700">
+                1 in 4 kids get lice. This happens to the best families, cleanest homes, and most caring parents.
               </p>
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <p className="text-blue-800 font-semibold">
-                  "Sarah helped me at 11 PM on a Sunday. Saved my sanity!" - Jennifer M.
-                </p>
-              </div>
             </div>
 
             <div className="bg-green-50 p-6 rounded-2xl border border-green-200 text-center">
-              <Phone className="w-12 h-12 text-green-600 mx-auto mb-4" />
-              <h4 className="text-xl font-bold text-green-800 mb-2">Emergency Hotline</h4>
-              <p className="text-green-700 mb-4">
-                For crisis situations. Speak to a lice specialist who's been there.
+              <AlertTriangle className="w-12 h-12 text-green-600 mx-auto mb-4" />
+              <h4 className="text-xl font-bold text-green-800 mb-2">It's Not Dangerous</h4>
+              <p className="text-green-700">
+                Lice are annoying, not dangerous. Your child is safe. This is a nuisance, not a health crisis.
               </p>
-              <div className="bg-green-100 p-3 rounded-lg">
-                <p className="text-green-800 font-semibold">
-                  "Called crying at midnight. They walked me through everything." - Maria T.
-                </p>
-              </div>
+            </div>
+
+            <div className="bg-purple-50 p-6 rounded-2xl border border-purple-200 text-center">
+              <Heart className="w-12 h-12 text-purple-600 mx-auto mb-4" />
+              <h4 className="text-xl font-bold text-purple-800 mb-2">You Can Fix This</h4>
+              <p className="text-purple-700">
+                With the right method, most families are lice-free within 24-48 hours. You just need the right plan.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-orange-50 p-6 rounded-2xl border border-orange-200">
+            <h4 className="text-xl font-bold text-orange-800 mb-4 text-center">
+              Emergency Calm-Down Checklist
+            </h4>
+            <div className="grid md:grid-cols-2 gap-4">
+              <ul className="space-y-2">
+                <li className="flex items-center text-orange-700">
+                  <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
+                  Take 3 deep breaths
+                </li>
+                <li className="flex items-center text-orange-700">
+                  <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
+                  Remember: this is temporary
+                </li>
+                <li className="flex items-center text-orange-700">
+                  <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
+                  Your child is safe and healthy
+                </li>
+              </ul>
+              <ul className="space-y-2">
+                <li className="flex items-center text-orange-700">
+                  <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
+                  You're a good parent
+                </li>
+                <li className="flex items-center text-orange-700">
+                  <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
+                  This happens to clean families
+                </li>
+                <li className="flex items-center text-orange-700">
+                  <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
+                  You will get through this
+                </li>
+              </ul>
             </div>
           </div>
 
           <div className="text-center mt-8">
             <p className="text-2xl font-bold text-gray-800 mb-2">
-              You don't have to figure this out alone.
+              Now let's get you the solution that actually works.
             </p>
             <p className="text-gray-600">
-              Included FREE with your Survival Kit - because no parent should panic alone.
+              No more panic, no more guessing - just a clear path to being lice-free.
             </p>
           </div>
         </div>

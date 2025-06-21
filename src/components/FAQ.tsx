@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, HelpCircle, Mail } from 'lucide-react';
 
 const FAQ: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
@@ -12,22 +12,22 @@ const FAQ: React.FC = () => {
     },
     {
       question: "How is this different from what I can find on Google?",
-      answer: "Google gives you 47 different conflicting methods with no way to know what actually works. Lucy's kit gives you ONE proven system with exact step-by-step instructions, timing, and follow-up protocols. Plus 24/7 support when you get stuck. It's the difference between a recipe and a cooking class with a master chef.",
+      answer: "Google gives you 47 different conflicting methods with no way to know what actually works. Lucy's kit gives you ONE proven system with exact step-by-step instructions, timing, and follow-up protocols. It's the difference between a recipe and a cooking class with a master chef.",
       category: "value"
     },
     {
       question: "What if my child has really thick/long/curly hair?",
-      answer: "The method works on ALL hair types. In fact, thick and curly hair often responds better because the enzyme treatment has more time to work. The kit includes specific techniques for different hair textures, and our support team has helped families with every hair type imaginable.",
+      answer: "The method works on ALL hair types. In fact, thick and curly hair often responds better because the enzyme treatment has more time to work. The kit includes specific techniques for different hair textures for every hair type imaginable.",
       category: "hair-type"
     },
     {
       question: "Is this safe for young children (under 5)?",
-      answer: "Absolutely. The enzyme treatments are gentler than most shampoos - no harsh chemicals or pesticides. The method is actually SAFER than drugstore treatments. We include specific guidance for toddlers and babies, including how to make the process less stressful for little ones.",
+      answer: "Absolutely. The enzyme treatments are gentler than most shampoos - no harsh chemicals or pesticides. The method is actually SAFER than drugstore treatments. The kit includes specific guidance for toddlers and babies, including how to make the process less stressful for little ones.",
       category: "safety"
     },
     {
       question: "What if I find lice again after treatment?",
-      answer: "The 21-day recheck calendar prevents this, but if it happens, you get lifetime access to the materials and can repeat the process. Our support team will also help you figure out what went wrong. Most 'reinfestations' are actually missed nits from the original treatment.",
+      answer: "The 21-day recheck calendar prevents this, but if it happens, you get lifetime access to the materials and can repeat the process. Most 'reinfestations' are actually missed nits from the original treatment, which is why the follow-up protocol is so important.",
       category: "reinfection"
     },
     {
@@ -46,14 +46,14 @@ const FAQ: React.FC = () => {
       category: "multiple"
     },
     {
-      question: "Is there really 24/7 support?",
-      answer: "Yes! Real humans, not bots. Our team includes parents who've been through this and lice specialists. Average response time is under 10 minutes. We know lice don't follow business hours, and neither do we.",
-      category: "support"
+      question: "What if I'm not tech-savvy?",
+      answer: "Everything is designed for stressed parents, not tech experts. Simple PDFs you can print, step-by-step checklists, and clear instructions. If you can read email, you can use this system.",
+      category: "tech"
     },
     {
-      question: "What if I'm not tech-savvy?",
-      answer: "Everything is designed for stressed parents, not tech experts. Simple PDFs you can print, videos you can watch on any device, and step-by-step checklists. If you can read email, you can use this system.",
-      category: "tech"
+      question: "What if I have questions while using the kit?",
+      answer: "The kit is designed to be comprehensive and self-contained, with detailed instructions for every scenario. Most parents find they have everything they need. For additional questions, you can reach out via email and we'll help guide you through any challenges.",
+      category: "support"
     }
   ];
 
@@ -106,23 +106,13 @@ const FAQ: React.FC = () => {
             Still Have Questions?
           </h3>
           <p className="text-blue-700 mb-6">
-            Don't let uncertainty keep you stuck in lice hell. Get answers from real humans who understand what you're going through.
+            The survival kit is designed to be comprehensive and answer every question you might have. For additional support, you can reach out via email.
           </p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Chat with Support</h4>
-              <p className="text-blue-700 text-sm mb-4">Get instant answers from lice specialists</p>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                Start Chat Now
-              </button>
-            </div>
-            <div className="bg-white p-6 rounded-2xl border border-blue-200">
-              <h4 className="font-bold text-blue-800 mb-2">Call Emergency Line</h4>
-              <p className="text-blue-700 text-sm mb-4">Speak to someone who's been there</p>
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                Call Now: 1-800-LUCY-HELP
-              </button>
-            </div>
+          <div className="bg-white p-6 rounded-2xl border border-blue-200 max-w-md mx-auto">
+            <Mail className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+            <h4 className="font-bold text-blue-800 mb-2">Email Support</h4>
+            <p className="text-blue-700 text-sm mb-4">Get detailed answers to your specific situation</p>
+            <p className="text-blue-600 font-medium">help@lucyknowslice.com</p>
           </div>
         </div>
       </div>
