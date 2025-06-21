@@ -20,16 +20,13 @@ import Disclaimer from '../components/Disclaimer';
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // Simple Google Drive redirect for now
+  // Stripe Invoice Purchase Flow
   const handlePurchase = () => {
-    // Replace this URL with your actual Google Drive folder link
-    const googleDriveLink = "https://drive.google.com/drive/folders/YOUR_FOLDER_ID_HERE?usp=sharing";
+    // Replace with your actual Stripe invoice link
+    const stripeInvoiceLink = "https://invoice.stripe.com/i/acct_XXXXX/test_XXXXX";
     
-    // Open in new tab so they don't lose your site
-    window.open(googleDriveLink, '_blank');
-    
-    // Optional: Also redirect to a thank you page
-    // navigate('/thank-you');
+    // Redirect to Stripe invoice
+    window.location.href = stripeInvoiceLink;
   };
 
   return (
