@@ -37,13 +37,13 @@ const LandingPage: React.FC = () => {
       <AlertBar />
       <Hero onPurchase={handlePurchase} />
       <PanicRelief />
-      <AgitationSection />
+      <AgitationSection onPurchase={handlePurchase} />
       <MythBusting />
-      <SolutionSection />
-      <CostComparison />
+      <SolutionSection onPurchase={handlePurchase} />
+      <CostComparison onPurchase={handlePurchase} />
       <KitContents onPurchase={handlePurchase} />
       <ScientificBacking />
-      <Testimonials />
+      <Testimonials onPurchase={handlePurchase} />
       <FAQ />
       <UrgencySection />
       <MoneyBackGuarantee />

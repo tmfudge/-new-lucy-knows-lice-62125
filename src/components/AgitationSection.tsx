@@ -1,6 +1,10 @@
 import React from 'react';
 
-const AgitationSection: React.FC = () => {
+interface AgitationSectionProps {
+  onPurchase: () => void;
+}
+
+const AgitationSection: React.FC<AgitationSectionProps> = ({ onPurchase }) => {
   const mistakes = [
     {
       icon: '😰',
@@ -149,7 +153,7 @@ const AgitationSection: React.FC = () => {
           </div>
 
           {/* Testimonials */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
             {[
               {
                 stars: '★★★★★',
@@ -168,6 +172,25 @@ const AgitationSection: React.FC = () => {
                 <div className="text-gray-600 font-semibold text-xs md:text-sm">{testimonial.author}</div>
               </div>
             ))}
+          </div>
+
+          {/* Strategic CTA After Agitation */}
+          <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-8 rounded-3xl text-center">
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              Ready to STOP Making These Expensive Mistakes?
+            </h3>
+            <p className="text-xl mb-6 opacity-90">
+              Don't waste another day (or dollar) on methods that don't work. Get the proven system now.
+            </p>
+            <button 
+              onClick={onPurchase}
+              className="bg-white text-red-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+            >
+              Get the REAL Solution - $27
+            </button>
+            <div className="text-red-100 text-sm">
+              ✓ Instant Access ✓ 14-Day Guarantee ✓ Stop the Confusion Tonight
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,11 @@
 import React from 'react';
 import { Star } from 'lucide-react';
 
-const Testimonials: React.FC = () => {
+interface TestimonialsProps {
+  onPurchase: () => void;
+}
+
+const Testimonials: React.FC<TestimonialsProps> = ({ onPurchase }) => {
   const mainTestimonials = [
     {
       stars: 5,
@@ -116,11 +120,21 @@ const Testimonials: React.FC = () => {
             ))}
           </div>
 
+          {/* Strategic CTA After Testimonials */}
           <div className="bg-gradient-to-r from-orange-500 to-orange-400 text-white p-10 rounded-3xl text-center">
             <h3 className="text-2xl font-bold mb-4">Ready to Join 1,500+ Success Stories?</h3>
-            <p className="text-lg opacity-90">
+            <p className="text-lg opacity-90 mb-6">
               Every parent above was exactly where you are right now - stressed, frustrated, and looking for a reliable educational resource that actually helps.
             </p>
+            <button 
+              onClick={onPurchase}
+              className="bg-white text-orange-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+            >
+              Join the Success Stories - $27
+            </button>
+            <div className="text-orange-100 text-sm">
+              ✓ Same Results These Parents Got ✓ Instant Access ✓ 14-Day Guarantee
+            </div>
           </div>
         </div>
       </section>

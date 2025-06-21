@@ -1,7 +1,11 @@
 import React from 'react';
 import { DollarSign, X, CheckCircle, AlertTriangle } from 'lucide-react';
 
-const CostComparison: React.FC = () => {
+interface CostComparisonProps {
+  onPurchase: () => void;
+}
+
+const CostComparison: React.FC<CostComparisonProps> = ({ onPurchase }) => {
   const alternatives = [
     {
       option: "Professional Lice Clinic",
@@ -183,8 +187,8 @@ const CostComparison: React.FC = () => {
           </table>
         </div>
 
-        {/* Value Proposition */}
-        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-10 rounded-3xl text-center">
+        {/* Strategic CTA After Cost Comparison */}
+        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-10 rounded-3xl text-center mb-8">
           <DollarSign className="w-16 h-16 mx-auto mb-6" />
           <h3 className="text-3xl font-bold mb-6">
             Save $500+ and Get Better Results
@@ -192,6 +196,19 @@ const CostComparison: React.FC = () => {
           <p className="text-2xl mb-6 opacity-90">
             For less than the cost of a family dinner out, learn the same methods $450 clinics use
           </p>
+          <button 
+            onClick={onPurchase}
+            className="bg-white text-blue-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+          >
+            Get the $27 Solution Now
+          </button>
+          <div className="text-blue-100 text-sm">
+            ✓ Same Methods as $450 Clinics ✓ Instant Access ✓ 14-Day Guarantee
+          </div>
+        </div>
+
+        {/* Value Proposition */}
+        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-10 rounded-3xl text-center">
           <div className="bg-white bg-opacity-20 p-6 rounded-2xl">
             <p className="text-xl font-semibold mb-4">
               "I spent $550 at a clinic for my first kid. When my second got lice, this educational resource taught me the same method for $27. I felt so stupid for not finding this first!" 

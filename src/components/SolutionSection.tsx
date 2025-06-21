@@ -1,6 +1,10 @@
 import React from 'react';
 
-const SolutionSection: React.FC = () => {
+interface SolutionSectionProps {
+  onPurchase: () => void;
+}
+
+const SolutionSection: React.FC<SolutionSectionProps> = ({ onPurchase }) => {
   return (
     <section className="bg-white py-20">
       <div className="max-w-4xl mx-auto px-6">
@@ -141,6 +145,25 @@ const SolutionSection: React.FC = () => {
                 All statistics are sourced from peer-reviewed research and clinical studies on lice treatment effectiveness.
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Strategic CTA After Solution */}
+        <div className="mt-12 bg-gradient-to-r from-green-500 to-green-600 text-white p-8 rounded-3xl text-center">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4">
+            Ready to Get the Same Results Lucy's Families Get?
+          </h3>
+          <p className="text-xl mb-6 opacity-90">
+            Join 1,000+ parents who chose education over expensive confusion. Get instant access to the complete system.
+          </p>
+          <button 
+            onClick={onPurchase}
+            className="bg-white text-green-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+          >
+            Get Lucy's Complete System - $27
+          </button>
+          <div className="text-green-100 text-sm">
+            ✓ Same Methods $350 Clinics Use ✓ Instant Access ✓ 14-Day Guarantee
           </div>
         </div>
       </div>
