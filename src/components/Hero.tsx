@@ -14,12 +14,13 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
     <section className="bg-gradient-to-br from-orange-50 to-orange-100 py-16">
       <div className="max-w-4xl mx-auto px-6">
         {/* Logo */}
-        <div className="w-32 h-32 mx-auto mb-8 flex items-center justify-center">
-          <img 
-            src="/lucy-logo.png" 
-            alt="Lucy Knows Lice" 
-            className="w-full h-full object-contain"
-          />
+        <div className="w-32 h-32 mx-auto mb-8 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-blue-500">
+          <div className="text-center font-bold">
+            <div className="text-orange-500 text-xl mb-1">LUCY</div>
+            <div className="text-gray-700 text-base">KNOWS</div>
+            <div className="text-green-600 text-xl mt-1">LICE</div>
+            <div className="text-3xl mt-2">🐛</div>
+          </div>
         </div>
 
         {/* Main Headline */}
