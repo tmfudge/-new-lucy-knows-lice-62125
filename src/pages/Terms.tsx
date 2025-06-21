@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, FileText, Shield, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, FileText, Shield, AlertTriangle, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Terms: React.FC = () => {
@@ -103,12 +103,41 @@ const Terms: React.FC = () => {
 
           {/* Contact Information */}
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Contact Information</h2>
-            <div className="text-gray-700">
+            <div className="flex items-center mb-4">
+              <Mail className="w-6 h-6 text-blue-600 mr-3" />
+              <h2 className="text-xl font-bold text-gray-900">Contact Information</h2>
+            </div>
+            <div className="text-gray-700 space-y-4">
               <p>
-                For questions about these terms or our educational content, please contact us at:
+                For questions about these terms, refund requests, or technical support with accessing your educational materials:
               </p>
-              <p className="mt-2 font-medium">help@lucyknowslice.com</p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="font-medium text-blue-800">Email Support:</p>
+                <p className="text-blue-700">hello@lucyknowslice.com</p>
+                <p className="text-sm text-blue-600 mt-2">
+                  Response time: 24-48 hours for all inquiries
+                </p>
+              </div>
+              <p className="text-sm text-gray-600">
+                <strong>Note:</strong> This email is for administrative purposes only. 
+                The educational materials are designed to be comprehensive and self-contained.
+              </p>
+            </div>
+          </section>
+
+          {/* Privacy Notice */}
+          <section>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Privacy & Data</h2>
+            <div className="text-gray-700 space-y-4">
+              <p>
+                We respect your privacy and only collect information necessary to deliver your educational materials:
+              </p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Email address for product delivery and support</li>
+                <li>Payment information (processed securely by our payment processor)</li>
+                <li>We do not sell or share your personal information</li>
+                <li>You may request data deletion at any time</li>
+              </ul>
             </div>
           </section>
         </div>

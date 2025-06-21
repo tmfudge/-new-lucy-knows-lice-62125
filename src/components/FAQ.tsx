@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, HelpCircle, Mail } from 'lucide-react';
+import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 
 const FAQ: React.FC = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
@@ -98,22 +98,6 @@ const FAQ: React.FC = () => {
               )}
             </div>
           ))}
-        </div>
-
-        {/* Still Have Questions */}
-        <div className="mt-12 bg-blue-50 border border-blue-200 rounded-3xl p-8 text-center">
-          <h3 className="text-2xl font-bold text-blue-800 mb-4">
-            Still Have Questions?
-          </h3>
-          <p className="text-blue-700 mb-6">
-            The survival kit is designed to be comprehensive and answer every question you might have. For additional support, you can reach out via email.
-          </p>
-          <div className="bg-white p-6 rounded-2xl border border-blue-200 max-w-md mx-auto">
-            <Mail className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-            <h4 className="font-bold text-blue-800 mb-2">Email Support</h4>
-            <p className="text-blue-700 text-sm mb-4">Get detailed answers to your specific situation</p>
-            <p className="text-blue-600 font-medium">help@lucyknowslice.com</p>
-          </div>
         </div>
       </div>
     </section>
