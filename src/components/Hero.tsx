@@ -58,7 +58,7 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
               'Skip the $200+ lice clinic visits',
               'Stop the failed drugstore treatments',
               'Get your child back to school FAST',
-              'End this nightmare in 24-48 hours'
+              'Learn the methods that work in 24-48 hours'
             ].map((benefit, index) => (
               <li key={index} className="flex items-start">
                 <span className="text-green-500 text-2xl font-bold mr-4 mt-1">✓</span>
@@ -86,16 +86,16 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
           <div className="text-center">
             <div className="flex items-center justify-center text-green-600 font-bold">
               <Star className="w-5 h-5 mr-1" />
-              4.9/5 Stars
+              Highly Rated
             </div>
-            <div className="text-gray-600 text-sm">1,247+ Reviews</div>
+            <div className="text-gray-600 text-sm">User Reports</div>
           </div>
           <div className="text-center">
             <div className="flex items-center justify-center text-orange-500 font-bold">
               <Clock className="w-5 h-5 mr-1" />
-              Works in 24-48h
+              Fast Results
             </div>
-            <div className="text-gray-600 text-sm">Average Clear Time</div>
+            <div className="text-gray-600 text-sm">Typical Timeline</div>
           </div>
         </div>
 

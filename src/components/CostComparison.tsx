@@ -16,8 +16,8 @@ const CostComparison: React.FC = () => {
       cost: "$15-$30 each",
       timeframe: "Multiple attempts",
       pros: ["Cheap upfront", "Easy to find"],
-      cons: ["95% failure rate", "Harsh chemicals", "Multiple purchases needed", "No guidance"],
-      verdict: "Cheap but doesn't work"
+      cons: ["High failure rate", "Harsh chemicals", "Multiple purchases needed", "No guidance"],
+      verdict: "Cheap but often doesn't work"
     },
     {
       option: "DIY Home Remedies",
@@ -31,9 +31,9 @@ const CostComparison: React.FC = () => {
       option: "Lucy's Survival Kit",
       cost: "$27",
       timeframe: "24-48 hours",
-      pros: ["Proven method", "Complete system", "24/7 support", "60-day guarantee"],
+      pros: ["Proven method", "Complete system", "Educational support", "14-day guarantee"],
       cons: ["Requires following instructions"],
-      verdict: "Best value for guaranteed results"
+      verdict: "Best value for comprehensive education"
     }
   ];
 
@@ -116,7 +116,7 @@ const CostComparison: React.FC = () => {
               <tr>
                 <th className="px-6 py-4 text-left font-bold text-gray-800">Option</th>
                 <th className="px-6 py-4 text-center font-bold text-gray-800">Cost</th>
-                <th className="px-6 py-4 text-center font-bold text-gray-800">Success Rate</th>
+                <th className="px-6 py-4 text-center font-bold text-gray-800">User Reports</th>
                 <th className="px-6 py-4 text-center font-bold text-gray-800">Time to Results</th>
                 <th className="px-6 py-4 text-center font-bold text-gray-800">Support</th>
               </tr>
@@ -125,30 +125,30 @@ const CostComparison: React.FC = () => {
               <tr className="border-t">
                 <td className="px-6 py-4 font-semibold">Professional Clinic</td>
                 <td className="px-6 py-4 text-center text-red-600 font-bold">$200-$450</td>
-                <td className="px-6 py-4 text-center text-green-600">85%</td>
+                <td className="px-6 py-4 text-center text-green-600">Generally Good</td>
                 <td className="px-6 py-4 text-center">Same day</td>
                 <td className="px-6 py-4 text-center text-red-600">None after visit</td>
               </tr>
               <tr className="border-t bg-gray-50">
                 <td className="px-6 py-4 font-semibold">Drugstore Treatments</td>
                 <td className="px-6 py-4 text-center text-yellow-600 font-bold">$15-$30 each</td>
-                <td className="px-6 py-4 text-center text-red-600">5%</td>
+                <td className="px-6 py-4 text-center text-red-600">Often Poor</td>
                 <td className="px-6 py-4 text-center">Rarely works</td>
                 <td className="px-6 py-4 text-center text-red-600">None</td>
               </tr>
               <tr className="border-t">
                 <td className="px-6 py-4 font-semibold">DIY/Home Remedies</td>
                 <td className="px-6 py-4 text-center text-green-600 font-bold">$0-$20</td>
-                <td className="px-6 py-4 text-center text-red-600">10%</td>
+                <td className="px-6 py-4 text-center text-red-600">Mixed</td>
                 <td className="px-6 py-4 text-center">Hit or miss</td>
                 <td className="px-6 py-4 text-center text-red-600">Google only</td>
               </tr>
               <tr className="border-t bg-green-50 border-2 border-green-500">
                 <td className="px-6 py-4 font-bold text-green-800">Lucy's Survival Kit</td>
                 <td className="px-6 py-4 text-center text-green-600 font-bold text-xl">$27</td>
-                <td className="px-6 py-4 text-center text-green-600 font-bold">98%</td>
+                <td className="px-6 py-4 text-center text-green-600 font-bold">Highly Positive</td>
                 <td className="px-6 py-4 text-center font-bold">24-48 hours</td>
-                <td className="px-6 py-4 text-center text-green-600 font-bold">24/7 chat</td>
+                <td className="px-6 py-4 text-center text-green-600 font-bold">Email support</td>
               </tr>
             </tbody>
           </table>
@@ -161,11 +161,11 @@ const CostComparison: React.FC = () => {
             Save $400+ and Get Better Results
           </h3>
           <p className="text-2xl mb-6 opacity-90">
-            For less than the cost of a family dinner out, get the same method $300 clinics use
+            For less than the cost of a family dinner out, learn the same methods $300 clinics use
           </p>
           <div className="bg-white bg-opacity-20 p-6 rounded-2xl">
             <p className="text-xl font-semibold">
-              "I spent $450 at a clinic for my first kid. When my second got lice, Lucy's method worked just as well for $27. I felt so stupid for not finding this first!" 
+              "I spent $450 at a clinic for my first kid. When my second got lice, this educational resource taught me the same method for $27. I felt so stupid for not finding this first!" 
             </p>
             <p className="text-green-100 mt-2">- Amanda K., Mother of 3</p>
           </div>

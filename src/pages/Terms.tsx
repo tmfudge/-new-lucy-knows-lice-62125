@@ -49,7 +49,29 @@ const Terms: React.FC = () => {
                 <li>Does not constitute medical advice</li>
                 <li>Should not replace professional medical consultation</li>
                 <li>Is not intended to diagnose, treat, cure, or prevent any condition</li>
+                <li>Teaches methods and approaches for informational purposes</li>
               </ul>
+            </div>
+          </section>
+
+          {/* Results and Satisfaction */}
+          <section>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Results and Individual Variation</h2>
+            <div className="text-gray-700 space-y-4">
+              <p>
+                The educational process of learning effective lice removal methods can provide immediate satisfaction through:
+              </p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Clear, step-by-step instructions that eliminate confusion</li>
+                <li>Immediate access to comprehensive educational materials</li>
+                <li>Systematic approach that reduces stress and uncertainty</li>
+                <li>Evidence-based methods compiled from research and professional practices</li>
+              </ul>
+              <p className="font-medium text-gray-800">
+                <strong>Important:</strong> While the educational content provides immediate value, 
+                individual results when applying the information may vary based on factors including 
+                severity of infestation, hair type, adherence to protocols, and individual circumstances.
+              </p>
             </div>
           </section>
 
@@ -64,11 +86,12 @@ const Terms: React.FC = () => {
                 We offer a 14-day satisfaction guarantee on the educational content provided:
               </p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Guarantee applies to satisfaction with educational materials only</li>
+                <li>Guarantee applies to satisfaction with educational materials and content quality</li>
                 <li>Refund requests must be made within 14 days of purchase</li>
                 <li>No questions asked policy for educational content satisfaction</li>
-                <li>Individual results may vary when applying the information</li>
-                <li>Guarantee does not cover treatment outcomes or results</li>
+                <li>Guarantee covers the comprehensiveness and clarity of the educational resource</li>
+                <li>Individual results when applying the information may vary</li>
+                <li>Guarantee does not cover treatment outcomes or specific results</li>
               </ul>
             </div>
           </section>
@@ -85,6 +108,24 @@ const Terms: React.FC = () => {
                 <li>You will consult healthcare professionals for medical concerns</li>
                 <li>Individual results may vary significantly</li>
                 <li>You assume responsibility for your own health decisions</li>
+                <li>The educational content is for informational purposes only</li>
+                <li>Success depends on proper application of the methods taught</li>
+              </ul>
+            </div>
+          </section>
+
+          {/* Testimonials and Reviews */}
+          <section>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">User Feedback and Testimonials</h2>
+            <div className="text-gray-700 space-y-4">
+              <p>
+                User testimonials and feedback represent individual experiences with the educational content:
+              </p>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>Testimonials reflect individual experiences and may not be typical</li>
+                <li>Results may vary based on individual circumstances and application</li>
+                <li>User feedback is based on their satisfaction with the educational materials</li>
+                <li>Individual success depends on following the educational protocols correctly</li>
               </ul>
             </div>
           </section>

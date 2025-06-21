@@ -10,12 +10,12 @@ const FinalCTA: React.FC<FinalCTAProps> = ({ onPurchase }) => {
     { icon: <Lock className="w-5 h-5" />, text: "Secure Checkout" },
     { icon: <Smartphone className="w-5 h-5" />, text: "Instant Access" },
     { icon: <CheckCircle className="w-5 h-5" />, text: "14-Day Guarantee" },
-    { icon: <Star className="w-5 h-5" />, text: "4.9/5 Stars" }
+    { icon: <Star className="w-5 h-5" />, text: "Highly Rated" }
   ];
 
   const stats = [
-    { icon: "📊", text: "98.7% Success Rate" },
-    { icon: "⚡", text: "24-48 Hour Results" },
+    { icon: "📊", text: "High Success Rate" },
+    { icon: "⚡", text: "Fast Results Reported" },
     { icon: "💬", text: "1,500+ Happy Parents" },
     { icon: "🏆", text: "Educational Resource" }
   ];

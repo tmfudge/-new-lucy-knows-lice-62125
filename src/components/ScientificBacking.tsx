@@ -26,7 +26,7 @@ const ScientificBacking: React.FC = () => {
           The Science Behind What Actually Works
         </h2>
         <p className="text-xl text-blue-700 text-center mb-12">
-          Medical research supports enzyme-based treatments and systematic combing
+          Research supports enzyme-based treatments and systematic combing methods
         </p>
 
         <div className="grid md:grid-cols-3 gap-8 mb-10">
@@ -45,7 +45,7 @@ const ScientificBacking: React.FC = () => {
         <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
           <h3 className="text-blue-800 text-2xl font-bold mb-4">The Research is Clear:</h3>
           <p className="text-gray-700 text-xl leading-relaxed">
-            Enzyme-based treatments + systematic metal combing + follow-up protocols = the most effective approach to modern lice treatment
+            Enzyme-based treatments + systematic metal combing + follow-up protocols = the most effective educational approach to modern lice treatment methods
           </p>
         </div>
       </div>
