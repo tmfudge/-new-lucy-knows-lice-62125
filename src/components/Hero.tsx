@@ -17,7 +17,7 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
         <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-blue-500 overflow-hidden">
           <img 
             src="/Lucy Know Lice Logo 500x500.png" 
-            alt="Lucy Knows Lice Logo" 
+            alt="Lucy Knows Head Lice Logo" 
             className="w-full h-full object-contain"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
@@ -39,17 +39,16 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
           {/* Main Headline Section */}
           <div className="lg:col-span-2">
-            {/* Attention-Grabbing Pre-Headline */}
-            <div className="bg-red-500 text-white px-4 py-2 rounded-full inline-block mb-4 font-bold text-sm md:text-base animate-pulse">
-              🚨 FOUND LICE? DON'T PANIC!
+            {/* Head Lice Specific Alert */}
+            <div className="bg-blue-500 text-white px-4 py-2 rounded-full inline-block mb-4 font-bold text-sm md:text-base">
+              🎯 HEAD LICE SPECIALIST - Not Body or Pubic Lice
             </div>
 
             {/* Main Headline with Strong Visual Hierarchy */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
               <span className="text-red-600">STOP!</span>{' '}
-              <span className="text-gray-800">Before You</span>{' '}
-              <span className="text-orange-500 underline decoration-4 decoration-orange-300">Google</span>{' '}
-              <span className="text-gray-800">"How to Get Rid of Lice"...</span>
+              <span className="text-gray-800">Before You Google</span>{' '}
+              <span className="text-orange-500 underline decoration-4 decoration-orange-300">"Head Lice Treatment"</span>
             </h1>
             
             {/* Subheadline */}
@@ -61,14 +60,14 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
             {/* Value Proposition */}
             <div className="bg-white p-6 rounded-2xl shadow-xl mb-6 border-l-4 border-green-500">
               <h3 className="text-orange-500 text-xl md:text-2xl font-bold mb-4">
-                What if there's a FASTER way that actually works?
+                What if there's a FASTER way to eliminate HEAD lice that actually works?
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {[
-                  'Skip the $350+ lice clinic visits',
+                  'Skip the $350+ head lice clinic visits',
                   'No more failed drugstore treatments',
                   'Get your child back to school FAST',
-                  'Learn methods that work in 24-48 hours'
+                  'Learn head lice methods that work in 24-48 hours'
                 ].map((benefit, index) => (
                   <div key={index} className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
@@ -112,7 +111,7 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
                   onClick={onPurchase}
                   className="w-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold py-4 px-6 rounded-full text-lg shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
                 >
-                  YES! Give Me the REAL Solution
+                  Get Head Lice Solution Now
                 </button>
                 
                 <div className="text-green-600 font-semibold text-sm mb-4">
@@ -123,7 +122,7 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                   <div className="flex items-center justify-center text-yellow-800 font-bold text-sm">
                     <AlertTriangle className="w-4 h-4 mr-2" />
-                    Every hour you wait, lice multiply!
+                    Every hour you wait, head lice multiply!
                   </div>
                 </div>
               </div>
@@ -131,30 +130,66 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
           </div>
         </div>
 
+        {/* Head Lice Clarification Section */}
+        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-6">
+          <h3 className="text-center text-blue-800 text-xl font-bold mb-4">
+            🎯 Important: This is About HEAD LICE Only
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div className="bg-white p-4 rounded-xl border-2 border-green-500">
+              <div className="text-3xl mb-2">✅</div>
+              <h4 className="font-bold text-green-800 mb-2">HEAD LICE</h4>
+              <p className="text-green-700 text-sm">
+                Found on scalp and hair. What this survival kit treats. 
+                Common in school-age children.
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border-2 border-red-300">
+              <div className="text-3xl mb-2">❌</div>
+              <h4 className="font-bold text-red-800 mb-2">BODY LICE</h4>
+              <p className="text-red-700 text-sm">
+                Live in clothing/bedding. Different treatment needed. 
+                See healthcare provider.
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border-2 border-red-300">
+              <div className="text-3xl mb-2">❌</div>
+              <h4 className="font-bold text-red-800 mb-2">PUBIC LICE</h4>
+              <p className="text-red-700 text-sm">
+                Found in pubic area. Different species entirely. 
+                Requires medical treatment.
+              </p>
+            </div>
+          </div>
+          <p className="text-center text-blue-700 font-medium mt-4">
+            <strong>This educational resource is specifically designed for HEAD LICE elimination only.</strong>
+          </p>
+        </div>
+
         {/* Quick Success Stories - Compact */}
         <div className="mt-8 bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-2xl border border-green-200">
           <h3 className="text-center text-green-700 text-lg font-bold mb-4">
-            Real Results from Real Parents (Just Like You)
+            Real Head Lice Success Stories from Parents (Just Like You)
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               {
                 icon: '⏰',
-                title: '"24 Hours - Done!"',
-                quote: 'Lice gone by next morning. Back at school Thursday.',
+                title: '"24 Hours - Head Lice Gone!"',
+                quote: 'Head lice eliminated by next morning. Back at school Thursday.',
                 author: 'Karen M.'
               },
               {
                 icon: '💰',
                 title: '"Saved $400+"',
-                quote: 'Was about to book $450 clinic. This worked for $62 total!',
+                quote: 'Was about to book $450 head lice clinic. This worked for $62 total!',
                 author: 'James T.'
               },
               {
                 icon: '👨‍👩‍👧‍👦',
                 title: '"All 3 Kids Clear"',
-                quote: 'Triplets all had lice. Cleared all three in 48 hours.',
+                quote: 'Triplets all had head lice. Cleared all three in 48 hours.',
                 author: 'Monica R.'
               }
             ].map((story, index) => (
