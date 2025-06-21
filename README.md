@@ -17,3 +17,20 @@
 <Disclaimer />                  // Footer with legal links
 <FloatingCharacter />           // Floating help button
 
+Each section is in its own component file in src/components/:
+
+AlertBar.tsx - Top notification bar
+Hero.tsx - Main headline and CTA (just updated)
+PanicRelief.tsx - 2 AM panic scenarios
+AgitationSection.tsx - Common mistakes parents make
+MythBusting.tsx - Debunking lice myths
+SolutionSection.tsx - Lucy's story
+CostComparison.tsx - Cost breakdown vs alternatives
+KitContents.tsx - What's included in the kit
+ScientificBacking.tsx - Research citations
+Testimonials.tsx - Customer reviews
+FAQ.tsx - Frequently asked questions
+UrgencySection.tsx - Why act now
+MoneyBackGuarantee.tsx - Guarantee details
+FinalCTA.tsx - Final call to action
+Disclaimer.tsx - Footer and legal
