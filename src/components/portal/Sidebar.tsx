@@ -60,8 +60,21 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection, isOp
       `}>
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">L</span>
+            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center overflow-hidden">
+              <img 
+                src="/Lucy Know Lice Logo 500x500.png" 
+                alt="Lucy Knows Lice Logo" 
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  // Fallback to text-based logo if image fails
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const parent = target.parentElement;
+                  if (parent) {
+                    parent.innerHTML = '<span class="text-white font-bold text-lg">L</span>';
+                  }
+                }}
+              />
             </div>
             <div>
               <h1 className="text-lg font-bold text-gray-800">Lucy's Portal</h1>

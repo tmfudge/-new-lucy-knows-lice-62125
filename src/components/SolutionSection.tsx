@@ -12,8 +12,21 @@ const SolutionSection: React.FC = () => {
         </p>
 
         <div className="bg-gradient-to-br from-green-50 to-teal-50 p-10 rounded-3xl border-2 border-green-500 text-center">
-          <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-4xl mx-auto mb-8 shadow-lg">
-            👩‍⚕️
+          <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-4xl mx-auto mb-8 shadow-lg overflow-hidden">
+            <img 
+              src="/Lucy Know Lice Bug" 
+              alt="Lucy Bug Character" 
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                // Fallback to emoji if image fails
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.innerHTML = '👩‍⚕️';
+                }
+              }}
+            />
           </div>
           
           <div className="text-left max-w-3xl mx-auto space-y-6 text-lg leading-relaxed">

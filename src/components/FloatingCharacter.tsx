@@ -7,10 +7,23 @@ const FloatingCharacter: React.FC = () => {
 
   return (
     <div 
-      className="fixed bottom-6 right-6 w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl cursor-pointer z-50 border-4 border-orange-500 animate-bounce hover:animate-none hover:scale-110 transition-transform duration-300"
+      className="fixed bottom-6 right-6 w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl cursor-pointer z-50 border-4 border-orange-500 animate-bounce hover:animate-none hover:scale-110 transition-transform duration-300 overflow-hidden"
       onClick={scrollToOrder}
     >
-      <div className="text-4xl">🐛</div>
+      <img 
+        src="/Lucy Know Lice Bug" 
+        alt="Lucy Bug Character" 
+        className="w-full h-full object-contain"
+        onError={(e) => {
+          // Fallback to emoji if image fails
+          const target = e.target as HTMLImageElement;
+          target.style.display = 'none';
+          const parent = target.parentElement;
+          if (parent) {
+            parent.innerHTML = '<div class="text-4xl">🐛</div>';
+          }
+        }}
+      />
     </div>
   );
 };

@@ -14,13 +14,28 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
     <section className="bg-gradient-to-br from-orange-50 to-orange-100 py-16">
       <div className="max-w-4xl mx-auto px-6">
         {/* Logo */}
-        <div className="w-32 h-32 mx-auto mb-8 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-blue-500">
-          <div className="text-center font-bold">
-            <div className="text-orange-500 text-xl mb-1">LUCY</div>
-            <div className="text-gray-700 text-base">KNOWS</div>
-            <div className="text-green-600 text-xl mt-1">LICE</div>
-            <div className="text-3xl mt-2">🐛</div>
-          </div>
+        <div className="w-32 h-32 mx-auto mb-8 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-blue-500 overflow-hidden">
+          <img 
+            src="/Lucy Know Lice Logo 500x500.png" 
+            alt="Lucy Knows Lice Logo" 
+            className="w-full h-full object-contain"
+            onError={(e) => {
+              // Fallback to text-based logo if image fails
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const parent = target.parentElement;
+              if (parent) {
+                parent.innerHTML = `
+                  <div class="text-center font-bold">
+                    <div class="text-orange-500 text-xl mb-1">LUCY</div>
+                    <div class="text-gray-700 text-base">KNOWS</div>
+                    <div class="text-green-600 text-xl mt-1">LICE</div>
+                    <div class="text-3xl mt-2">🐛</div>
+                  </div>
+                `;
+              }
+            }}
+          />
         </div>
 
         {/* Main Headline */}
