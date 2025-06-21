@@ -51,14 +51,6 @@ const SolutionSection: React.FC = () => {
               without clear guidance and a proven plan.
             </p>
           </div>
-          
-          <div className="mt-8 p-4 bg-white rounded-lg border border-green-300">
-            <p className="text-sm text-green-800">
-              <strong>Please note:</strong> "Lucy" is a fictional character created for educational purposes. 
-              This survival kit contains informational content only and is not medical advice. 
-              Always consult healthcare professionals for medical concerns.
-            </p>
-          </div>
         </div>
       </div>
     </section>
