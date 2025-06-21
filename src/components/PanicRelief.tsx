@@ -57,6 +57,18 @@ const PanicRelief: React.FC = () => {
           ))}
         </div>
 
+        {/* Research-Based Reassurance */}
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+          <h3 className="text-xl font-bold text-blue-800 mb-4 text-center">
+            What Research Shows About Parent Stress
+          </h3>
+          <p className="text-blue-700 text-center text-lg">
+            Studies confirm that parents report <strong>significant stress, anxiety, and helplessness</strong> 
+            throughout the lice treatment process, often due to misinformation and repeated failures. 
+            <span className="font-semibold"> You're not overreacting - this IS stressful!</span>
+          </p>
+        </div>
+
         {/* Immediate Relief Section */}
         <div className="bg-white p-10 rounded-3xl shadow-2xl border-4 border-orange-500">
           <div className="text-center mb-8">
@@ -82,7 +94,7 @@ const PanicRelief: React.FC = () => {
               <AlertTriangle className="w-12 h-12 text-green-600 mx-auto mb-4" />
               <h4 className="text-xl font-bold text-green-800 mb-2">It's Not Dangerous</h4>
               <p className="text-green-700">
-                Lice are annoying, not dangerous. Your child is safe. This is a nuisance, not a health crisis.
+                Lice don't spread disease and are a nuisance, not a health hazard. Your child is safe. This is manageable.
               </p>
             </div>
 
@@ -97,17 +109,17 @@ const PanicRelief: React.FC = () => {
 
           <div className="bg-orange-50 p-6 rounded-2xl border border-orange-200">
             <h4 className="text-xl font-bold text-orange-800 mb-4 text-center">
-              Emergency Calm-Down Checklist
+              Emergency Calm-Down Checklist (Research-Backed)
             </h4>
             <div className="grid md:grid-cols-2 gap-4">
               <ul className="space-y-2">
                 <li className="flex items-center text-orange-700">
                   <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
-                  Take 3 deep breaths
+                  Don't panic or overreact
                 </li>
                 <li className="flex items-center text-orange-700">
                   <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
-                  Remember: this is temporary
+                  Remember: lice don't spread disease
                 </li>
                 <li className="flex items-center text-orange-700">
                   <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
@@ -117,7 +129,7 @@ const PanicRelief: React.FC = () => {
               <ul className="space-y-2">
                 <li className="flex items-center text-orange-700">
                   <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
-                  You're a good parent
+                  Don't hide due to stigma
                 </li>
                 <li className="flex items-center text-orange-700">
                   <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
@@ -125,7 +137,7 @@ const PanicRelief: React.FC = () => {
                 </li>
                 <li className="flex items-center text-orange-700">
                   <CheckCircle className="w-4 h-4 mr-2 text-orange-600" />
-                  You will get through this
+                  Open communication helps prevent spread
                 </li>
               </ul>
             </div>

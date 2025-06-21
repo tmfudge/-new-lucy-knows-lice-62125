@@ -10,17 +10,17 @@ const MythBusting: React.FC = () => {
     {
       title: 'Home "Suffocation" Methods',
       myth: 'Mayonnaise, olive oil, Vaseline kill lice',
-      reality: 'Fail 90% of the time. Lice can hold their breath for HOURS. You just waste time while they multiply.'
+      reality: 'Research shows little to no scientific support. Lice can hold their breath for HOURS. You just waste time while they multiply.'
     },
     {
       title: 'Drugstore "Super Strength" Treatments',
       myth: 'Stronger chemicals = better results',
-      reality: '95% failure rate due to "super lice" resistance. You\'re poisoning your child\'s scalp for nothing.'
+      reality: 'Up to 65% failure rate due to resistance. You\'re using harsh chemicals on your child\'s scalp for nothing.'
     },
     {
       title: 'Plastic "Lice Combs"',
       myth: 'Any fine-tooth comb works the same',
-      reality: 'Plastic combs miss 80% of eggs. They\'re too flexible to grip nits properly. You need metal teeth.'
+      reality: 'Plastic combs miss 80% of eggs. They\'re too flexible to grip nits properly. You need metal teeth for proper removal.'
     },
     {
       title: '"Natural" Heat Treatments',
@@ -44,6 +44,30 @@ const MythBusting: React.FC = () => {
           The $50 million "lice prevention" industry is built on myths that keep you buying products that DON'T WORK
         </p>
 
+        {/* Research Alert */}
+        <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
+          <div className="flex items-center mb-4">
+            <div className="text-3xl mr-4">🚨</div>
+            <h3 className="text-xl font-bold text-red-800">Research Alert: Why Most Treatments Fail</h3>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white p-4 rounded-lg border border-red-300">
+              <h4 className="font-bold text-red-700 mb-2">The Resistance Problem:</h4>
+              <p className="text-red-600 text-sm">
+                <strong>Up to 65% of head lice</strong> have developed resistance to common over-the-counter 
+                pyrethroid treatments, leading to treatment failures and persistent infestations.
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-lg border border-red-300">
+              <h4 className="font-bold text-red-700 mb-2">The Identification Problem:</h4>
+              <p className="text-red-600 text-sm">
+                <strong>Only about 57.5%</strong> of suspected lice cases are correctly identified, 
+                causing confusion and ineffective treatments for nearly half of all cases.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {myths.map((myth, index) => (
             <div key={index} className="bg-white p-8 rounded-3xl shadow-lg border-l-4 border-red-500 hover:-translate-y-2 transition-transform duration-300">
@@ -60,10 +84,10 @@ const MythBusting: React.FC = () => {
 
         {/* What Actually Works */}
         <div className="bg-gradient-to-r from-orange-500 to-orange-400 text-white p-10 rounded-3xl shadow-2xl text-center">
-          <h3 className="text-3xl font-bold mb-6">Here's What Actually Works:</h3>
-          <p className="text-2xl mb-6">Enzyme-based treatments + metal combing + systematic follow-up</p>
+          <h3 className="text-3xl font-bold mb-6">Here's What Research Shows Actually Works:</h3>
+          <p className="text-2xl mb-6">Proper identification + systematic wet combing + quality tools + follow-up protocols</p>
           <p className="text-xl mb-6 opacity-90">
-            <strong>The same method $200+ lice clinics use</strong> - but you can learn it for $27 and do it at home tonight.
+            <strong>The same evidence-based methods $200+ lice clinics use</strong> - but you can learn them for $27 and do it at home tonight.
           </p>
           
           <div className="bg-white bg-opacity-20 p-6 rounded-2xl">

@@ -54,17 +54,29 @@ const AgitationSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Shocking Truth */}
+        {/* Shocking Truth with NEW STATISTICS */}
         <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-10 rounded-3xl border-2 border-orange-500">
           <h3 className="text-3xl text-orange-500 font-bold text-center mb-8">
-            The Shocking Truth About Lice
+            The Shocking Truth About Lice (Based on Recent Research)
           </h3>
           
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {[
-              { stat: '1 in 4', text: 'kids will get lice', subtext: 'That\'s 12+ million kids annually in the US' },
-              { stat: '1 in 10', text: 'kids has lice RIGHT NOW', subtext: 'Including kids from $100k+ families' },
-              { stat: '95%', text: 'of drugstore treatments FAIL', subtext: 'Thanks to "super lice" resistance' }
+              { 
+                stat: 'Up to 65%', 
+                text: 'of lice are now resistant', 
+                subtext: 'to common drugstore treatments - that\'s why they keep failing!' 
+              },
+              { 
+                stat: 'Only 57.5%', 
+                text: 'of suspected cases', 
+                subtext: 'are correctly identified - most parents are treating the wrong thing' 
+              },
+              { 
+                stat: 'Significant', 
+                text: 'stress & anxiety reported', 
+                subtext: 'by parents due to misinformation and repeated treatment failures' 
+              }
             ].map((item, index) => (
               <div key={index} className="bg-white p-6 rounded-2xl shadow-lg text-center">
                 <div className="text-4xl font-bold text-orange-500 mb-2">{item.stat}</div>
@@ -78,17 +90,42 @@ const AgitationSection: React.FC = () => {
             You're not a bad parent. You're dealing with a $50 million myth industry that profits from your panic.
           </p>
 
+          {/* Research-Based Reality Check */}
+          <div className="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-red-500 mb-8">
+            <h4 className="text-xl font-bold text-red-800 mb-4">What Research Actually Shows:</h4>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h5 className="font-bold text-gray-800 mb-2">❌ What DOESN'T Work:</h5>
+                <ul className="text-gray-700 space-y-1 text-sm">
+                  <li>• Mayonnaise and oils (no scientific support)</li>
+                  <li>• Most drugstore treatments (65% resistance rate)</li>
+                  <li>• Heat treatments (dangerous and ineffective)</li>
+                  <li>• Hiding the problem (makes it worse)</li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="font-bold text-gray-800 mb-2">✅ What DOES Work:</h5>
+                <ul className="text-gray-700 space-y-1 text-sm">
+                  <li>• Proper identification (avoid the 42.5% error rate)</li>
+                  <li>• Quality metal combs (systematic removal)</li>
+                  <li>• Open communication (prevents spread)</li>
+                  <li>• Staying calm (reduces family stress)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           {/* Testimonials */}
           <div className="grid md:grid-cols-2 gap-6">
             {[
               {
                 stars: '★★★★★',
-                quote: 'I wish I found Lucy FIRST instead of wasting $200 on treatments that didn\'t work. Her method cleared my twin boys in 24 hours!',
+                quote: 'I wish I found this FIRST instead of wasting $200 on treatments that didn\'t work. This method cleared my twin boys in 24 hours!',
                 author: 'Andrea M., Phoenix, AZ'
               },
               {
                 stars: '★★★★★',
-                quote: 'Three kids all got lice from school. Every drugstore treatment failed. Lucy\'s enzyme method worked on all three in 48 hours. AMAZING.',
+                quote: 'Three kids all got lice from school. Every drugstore treatment failed. This enzyme method worked on all three in 48 hours. AMAZING.',
                 author: 'Kevin & Sarah L., Denver, CO'
               }
             ].map((testimonial, index) => (

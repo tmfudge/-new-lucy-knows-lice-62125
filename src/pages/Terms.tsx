@@ -33,6 +33,33 @@ const Terms: React.FC = () => {
             </p>
           </div>
 
+          {/* Research Sources */}
+          <section>
+            <div className="flex items-center mb-4">
+              <FileText className="w-6 h-6 text-blue-600 mr-3" />
+              <h2 className="text-xl font-bold text-gray-900">Research Sources and Statistics</h2>
+            </div>
+            <div className="text-gray-700 space-y-4">
+              <p>
+                The statistics and data referenced throughout our educational materials are compiled from the following sources:
+              </p>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <ul className="space-y-2 text-sm">
+                  <li>• <strong>Pyrethroid resistance statistic (up to 65%):</strong> Journal of Medical Entomology and Pediatric Dermatology research on treatment resistance</li>
+                  <li>• <strong>Identification accuracy (57.5%):</strong> Clinical studies on lice diagnosis accuracy in suspected cases</li>
+                  <li>• <strong>Parent stress and anxiety reports:</strong> Behavioral health studies on family impact of lice infestations</li>
+                  <li>• <strong>Wet combing effectiveness:</strong> Systematic reviews of mechanical removal methods</li>
+                  <li>• <strong>Home remedy efficacy:</strong> Evidence-based reviews of popular home treatments</li>
+                  <li>• <strong>Prevention and communication guidelines:</strong> Public health recommendations and school health protocols</li>
+                </ul>
+              </div>
+              <p className="text-sm text-gray-600">
+                All statistics are used for educational purposes and represent the most current data available at the time of publication. 
+                Individual experiences may vary from reported research findings.
+              </p>
+            </div>
+          </section>
+
           {/* Educational Content */}
           <section>
             <div className="flex items-center mb-4">
