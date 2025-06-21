@@ -39,11 +39,6 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
           {/* Main Headline Section */}
           <div className="lg:col-span-2">
-            {/* Head Lice Specific Alert */}
-            <div className="bg-blue-500 text-white px-4 py-2 rounded-full inline-block mb-4 font-bold text-sm md:text-base">
-              🎯 HEAD LICE SPECIALIST - Not Body or Pubic Lice
-            </div>
-
             {/* Main Headline with Strong Visual Hierarchy */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
               <span className="text-red-600">STOP!</span>{' '}
