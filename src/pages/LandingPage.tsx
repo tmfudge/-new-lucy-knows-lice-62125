@@ -22,8 +22,8 @@ const LandingPage: React.FC = () => {
 
   // Stripe Invoice Purchase Flow
   const handlePurchase = () => {
-    // Replace with your actual Stripe invoice link
-    const stripeInvoiceLink = "https://invoice.stripe.com/i/acct_XXXXX/test_XXXXX";
+    // Replace this with your actual Stripe invoice link
+    const stripeInvoiceLink = "YOUR_STRIPE_INVOICE_LINK_HERE";
     
     // Redirect to Stripe invoice
     window.location.href = stripeInvoiceLink;
