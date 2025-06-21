@@ -23,7 +23,7 @@ const LandingPage: React.FC = () => {
   // Stripe Invoice Purchase Flow
   const handlePurchase = () => {
     // Your Stripe invoice link
-    const stripeInvoiceLink = "https://buy.stripe.com/28EdR8cDG3Ei1v066K9oc00";
+    const stripeInvoiceLink = "https://buy.stripe.com/aFa14meLO7Uyc9EgLo9oc02";
     
     // Redirect to Stripe invoice
     window.location.href = stripeInvoiceLink;
