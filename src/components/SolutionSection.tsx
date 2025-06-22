@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface SolutionSectionProps {
-  onPurchase: (customClassName?: string) => React.ReactNode;
+  onPurchase: () => void;
 }
 
 const SolutionSection: React.FC<SolutionSectionProps> = ({ onPurchase }) => {
@@ -156,9 +156,12 @@ const SolutionSection: React.FC<SolutionSectionProps> = ({ onPurchase }) => {
           <p className="text-xl mb-6 opacity-90">
             Join 1,000+ parents who chose education over expensive confusion. Get instant access to the complete system.
           </p>
-          <div className="mb-4">
-            {onPurchase('inline-block')}
-          </div>
+          <button 
+            onClick={onPurchase}
+            className="bg-white text-green-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+          >
+            Get Lucy's Complete System - $27
+          </button>
           <div className="text-green-100 text-sm">
             ✓ Same Methods $350 Clinics Use ✓ Instant Access ✓ 14-Day Guarantee
           </div>

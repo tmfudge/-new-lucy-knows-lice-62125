@@ -2,7 +2,7 @@ import React from 'react';
 import { DollarSign, X, CheckCircle, AlertTriangle } from 'lucide-react';
 
 interface CostComparisonProps {
-  onPurchase: (customClassName?: string) => React.ReactNode;
+  onPurchase: () => void;
 }
 
 const CostComparison: React.FC<CostComparisonProps> = ({ onPurchase }) => {
@@ -196,9 +196,12 @@ const CostComparison: React.FC<CostComparisonProps> = ({ onPurchase }) => {
           <p className="text-2xl mb-6 opacity-90">
             For less than the cost of a family dinner out, learn the same methods $450 clinics use
           </p>
-          <div className="mb-4">
-            {onPurchase('inline-block')}
-          </div>
+          <button 
+            onClick={onPurchase}
+            className="bg-white text-blue-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+          >
+            Get the $27 Solution Now
+          </button>
           <div className="text-blue-100 text-sm">
             ✓ Same Methods as $450 Clinics ✓ Instant Access ✓ 14-Day Guarantee
           </div>

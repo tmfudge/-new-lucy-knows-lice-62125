@@ -16,53 +16,31 @@ import MoneyBackGuarantee from '../components/MoneyBackGuarantee';
 import FinalCTA from '../components/FinalCTA';
 import FloatingCharacter from '../components/FloatingCharacter';
 import Disclaimer from '../components/Disclaimer';
-import StripeBuyButton from '../components/StripeBuyButton';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // Handle purchase success
-  const handlePurchaseSuccess = () => {
-    // You can add analytics tracking here
-    console.log('Purchase successful!');
-    
-    // Optionally redirect to a thank you page or show a success message
-    // navigate('/thank-you');
-  };
-
-  // Handle purchase error
-  const handlePurchaseError = (error: any) => {
-    console.error('Purchase error:', error);
-    // You can show an error message to the user here
-  };
-
-  // Create a function that returns the Stripe buy button
-  const renderPurchaseButton = (customClassName?: string) => {
-    return (
-      <StripeBuyButton 
-        className={customClassName}
-        onSuccess={handlePurchaseSuccess}
-        onError={handlePurchaseError}
-      />
-    );
+  // Simple, direct Stripe redirect - best UX with least friction
+  const handlePurchase = () => {
+    window.location.href = "https://buy.stripe.com/aFa14meLO7Uyc9EgLo9oc02";
   };
 
   return (
     <div className="min-h-screen bg-white">
       <AlertBar />
-      <Hero onPurchase={renderPurchaseButton} />
+      <Hero onPurchase={handlePurchase} />
       <PanicRelief />
-      <AgitationSection onPurchase={renderPurchaseButton} />
+      <AgitationSection onPurchase={handlePurchase} />
       <MythBusting />
-      <SolutionSection onPurchase={renderPurchaseButton} />
-      <CostComparison onPurchase={renderPurchaseButton} />
-      <KitContents onPurchase={renderPurchaseButton} />
+      <SolutionSection onPurchase={handlePurchase} />
+      <CostComparison onPurchase={handlePurchase} />
+      <KitContents onPurchase={handlePurchase} />
       <ScientificBacking />
-      <Testimonials onPurchase={renderPurchaseButton} />
+      <Testimonials onPurchase={handlePurchase} />
       <FAQ />
       <UrgencySection />
       <MoneyBackGuarantee />
-      <FinalCTA onPurchase={renderPurchaseButton} />
+      <FinalCTA onPurchase={handlePurchase} />
       <Disclaimer />
       <FloatingCharacter />
     </div>

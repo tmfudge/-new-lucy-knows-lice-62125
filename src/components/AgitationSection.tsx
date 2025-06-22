@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface AgitationSectionProps {
-  onPurchase: (customClassName?: string) => React.ReactNode;
+  onPurchase: () => void;
 }
 
 const AgitationSection: React.FC<AgitationSectionProps> = ({ onPurchase }) => {
@@ -182,9 +182,12 @@ const AgitationSection: React.FC<AgitationSectionProps> = ({ onPurchase }) => {
             <p className="text-xl mb-6 opacity-90">
               Don't waste another day (or dollar) on methods that don't work. Get the proven system now.
             </p>
-            <div className="mb-4">
-              {onPurchase('inline-block')}
-            </div>
+            <button 
+              onClick={onPurchase}
+              className="bg-white text-red-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+            >
+              Get the REAL Solution - $27
+            </button>
             <div className="text-red-100 text-sm">
               ✓ Instant Access ✓ 14-Day Guarantee ✓ Stop the Confusion Tonight
             </div>
