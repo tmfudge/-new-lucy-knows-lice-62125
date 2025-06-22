@@ -2,7 +2,7 @@ import React from 'react';
 import { Lock, Smartphone, CheckCircle, Star } from 'lucide-react';
 
 interface FinalCTAProps {
-  onPurchase: () => void;
+  onPurchase: (customClassName?: string) => React.ReactNode;
 }
 
 const FinalCTA: React.FC<FinalCTAProps> = ({ onPurchase }) => {
@@ -28,12 +28,9 @@ const FinalCTA: React.FC<FinalCTAProps> = ({ onPurchase }) => {
           Join 1,000+ parents who chose the smart way to handle lice
         </p>
 
-        <button 
-          onClick={onPurchase}
-          className="bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold py-4 md:py-6 px-8 md:px-12 rounded-full text-xl md:text-2xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-6 md:mb-8 w-full max-w-md md:max-w-none md:w-auto"
-        >
-          Get Lucy's Survival Kit - $27
-        </button>
+        <div className="mb-6 md:mb-8">
+          {onPurchase('inline-block')}
+        </div>
 
         <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-6 md:mb-8 text-sm md:text-base">
           {trustSignals.map((signal, index) => (

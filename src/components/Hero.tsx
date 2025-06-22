@@ -2,7 +2,7 @@ import React from 'react';
 import { Star, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 
 interface HeroProps {
-  onPurchase: () => void;
+  onPurchase: (customClassName?: string) => React.ReactNode;
 }
 
 const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
@@ -102,12 +102,10 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
                 <div className="text-5xl font-extrabold text-green-600 mb-2">$27</div>
                 <div className="text-orange-500 font-bold text-lg mb-6">Just $27 Today!</div>
                 
-                <button 
-                  onClick={onPurchase}
-                  className="w-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold py-4 px-6 rounded-full text-lg shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
-                >
-                  Get Head Lice Solution Now
-                </button>
+                {/* Stripe Buy Button */}
+                <div className="mb-4">
+                  {onPurchase('w-full')}
+                </div>
                 
                 <div className="text-green-600 font-semibold text-sm mb-4">
                   ✓ Instant Access ✓ 14-Day Guarantee ✓ Works on Any Device

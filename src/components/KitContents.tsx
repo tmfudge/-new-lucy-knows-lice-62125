@@ -2,7 +2,7 @@ import React from 'react';
 import { AlertTriangle, Target, Calendar, Users, CheckSquare, Heart } from 'lucide-react';
 
 interface KitContentsProps {
-  onPurchase: () => void;
+  onPurchase: (customClassName?: string) => React.ReactNode;
 }
 
 const KitContents: React.FC<KitContentsProps> = ({ onPurchase }) => {
@@ -84,12 +84,9 @@ const KitContents: React.FC<KitContentsProps> = ({ onPurchase }) => {
           <div className="text-6xl text-green-600 font-extrabold mb-4">$27</div>
           <div className="text-2xl text-orange-500 font-bold mb-8">That's 87% Off - Just $27!</div>
           
-          <button 
-            onClick={onPurchase}
-            className="bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-6"
-          >
-            Get My Survival Kit Now
-          </button>
+          <div className="mb-6">
+            {onPurchase('inline-block')}
+          </div>
           
           <p className="text-gray-600 font-medium">
             ✓ Instant Download ✓ Works on Any Device ✓ 14-Day Guarantee

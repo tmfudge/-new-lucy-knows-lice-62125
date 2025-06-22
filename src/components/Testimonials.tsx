@@ -2,7 +2,7 @@ import React from 'react';
 import { Star } from 'lucide-react';
 
 interface TestimonialsProps {
-  onPurchase: () => void;
+  onPurchase: (customClassName?: string) => React.ReactNode;
 }
 
 const Testimonials: React.FC<TestimonialsProps> = ({ onPurchase }) => {
@@ -126,12 +126,9 @@ const Testimonials: React.FC<TestimonialsProps> = ({ onPurchase }) => {
             <p className="text-lg opacity-90 mb-6">
               Every parent above was exactly where you are right now - stressed, frustrated, and looking for a reliable educational resource that actually helps.
             </p>
-            <button 
-              onClick={onPurchase}
-              className="bg-white text-orange-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
-            >
-              Join the Success Stories - $27
-            </button>
+            <div className="mb-4">
+              {onPurchase('inline-block')}
+            </div>
             <div className="text-orange-100 text-sm">
               ✓ Same Results These Parents Got ✓ Instant Access ✓ 14-Day Guarantee
             </div>
