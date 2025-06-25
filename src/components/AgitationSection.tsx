@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { trackSectionView } from '../utils/analytics';
 
 interface AgitationSectionProps {
-  onPurchase: () => void;
+  onPurchase: (location?: string) => void;
 }
 
 const AgitationSection: React.FC<AgitationSectionProps> = ({ onPurchase }) => {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            trackSectionView('agitation');
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    const sectionElement = document.getElementById('agitation-section');
+    if (sectionElement) {
+      observer.observe(sectionElement);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const mistakes = [
     {
       icon: '😰',
@@ -38,8 +59,13 @@ const AgitationSection: React.FC<AgitationSectionProps> = ({ onPurchase }) => {
     }
   ];
 
+  const handlePurchaseClick = (location: string) => {
+    console.log('🎯 Agitation section purchase button clicked:', location);
+    onPurchase(location);
+  };
+
   return (
-    <section className="bg-gray-50 py-16 md:py-20">
+    <section id="agitation-section" className="bg-gray-50 py-16 md:py-20">
       <div className="max-w-6xl mx-auto px-4 md:px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-4 md:mb-6 px-2">
           Here's What Most Parents Get Wrong About Head Lice...
@@ -183,8 +209,9 @@ const AgitationSection: React.FC<AgitationSectionProps> = ({ onPurchase }) => {
               Don't waste another day (or dollar) on methods that don't work. Get the proven system now.
             </p>
             <button 
-              onClick={onPurchase}
-              className="bg-white text-red-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+              onClick={() => handlePurchaseClick('agitation-cta')}
+              className="bg-white text-red-600 font-bold py-4 px-8 rounded-full text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4 cursor-pointer"
+              type="button"
             >
               Get the REAL Solution - $27
             </button>

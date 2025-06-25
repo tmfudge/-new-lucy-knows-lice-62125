@@ -1,17 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Star, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
+import { trackSectionView } from '../utils/analytics';
 
 interface HeroProps {
-  onPurchase: () => void;
+  onPurchase: (location?: string) => void;
 }
 
 const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
+  useEffect(() => {
+    // Track when hero section comes into view
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            trackSectionView('hero');
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const heroElement = document.getElementById('hero-section');
+    if (heroElement) {
+      observer.observe(heroElement);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const scrollToOrder = () => {
     document.getElementById('order')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handlePurchaseClick = (location: string) => {
+    console.log('🎯 Hero purchase button clicked:', location);
+    onPurchase(location);
+  };
+
   return (
-    <section className="bg-gradient-to-br from-orange-50 to-orange-100 py-8 md:py-12">
+    <section id="hero-section" className="bg-gradient-to-br from-orange-50 to-orange-100 py-8 md:py-12">
       <div className="max-w-6xl mx-auto px-4 md:px-6">
         {/* Compact Logo */}
         <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-blue-500 overflow-hidden">
@@ -103,8 +130,9 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
                 <div className="text-orange-500 font-bold text-lg mb-6">Just $27 Today!</div>
                 
                 <button 
-                  onClick={onPurchase}
-                  className="w-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold py-4 px-6 rounded-full text-lg shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4"
+                  onClick={() => handlePurchaseClick('hero-main-cta')}
+                  className="w-full bg-gradient-to-r from-orange-500 to-orange-400 text-white font-bold py-4 px-6 rounded-full text-lg shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all duration-300 mb-4 cursor-pointer"
+                  type="button"
                 >
                   Get Head Lice Solution Now
                 </button>
