@@ -67,14 +67,14 @@ const Hero: React.FC<HeroProps> = ({ onPurchase }) => {
           {/* Main Headline Section */}
           <div className="lg:col-span-2">
             {/* Main Headline with Strong Visual Hierarchy */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4 text-center lg:text-left">
               <span className="text-red-600">STOP!</span>{' '}
               <span className="text-gray-800">Before You Google</span>{' '}
               <span className="text-orange-500 underline decoration-4 decoration-orange-300">"Head Lice Treatment"</span>
             </h1>
             
             {/* Subheadline */}
-            <p className="text-xl md:text-2xl lg:text-3xl text-gray-700 font-bold mb-6 leading-tight">
+            <p className="text-xl md:text-2xl lg:text-3xl text-gray-700 font-bold mb-6 leading-tight text-center lg:text-left">
               You're About to Waste <span className="text-red-600">Hours</span>, 
               Stress Yourself Out, and Probably <span className="text-red-600">Make It Worse</span>
             </p>
