@@ -7,19 +7,18 @@ const headers = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-// Your custom assistant ID
-const ASSISTANT_ID = 'asst_iZFLhw33e3RWkihX9Zw23uX0';
-
 exports.handler = async (event, context) => {
   console.log('=== CHAT FUNCTION CALLED ===');
   console.log('Method:', event.httpMethod);
   console.log('Environment check:');
   console.log('- NODE_ENV:', process.env.NODE_ENV);
   console.log('- NETLIFY_DEV:', process.env.NETLIFY_DEV);
-  console.log('- Available env vars:', Object.keys(process.env).filter(key => key.includes('OPENAI')));
+  console.log('- Available env vars:', Object.keys(process.env).filter(key => key.includes('OPENAI') || key.includes('ASSISTANT')));
   console.log('- Has OpenAI Key:', !!process.env.OPENAI_API_KEY);
   console.log('- Key length:', process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.length : 0);
   console.log('- Key starts with:', process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 7) : 'N/A');
+  console.log('- Has Assistant ID:', !!process.env.OPENAI_ASSISTANT_ID);
+  console.log('- Assistant ID:', process.env.OPENAI_ASSISTANT_ID ? process.env.OPENAI_ASSISTANT_ID.substring(0, 15) + '...' : 'N/A');
 
   // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
@@ -59,6 +58,23 @@ exports.handler = async (event, context) => {
     };
   }
 
+  // Check if Assistant ID is available
+  const assistantId = process.env.OPENAI_ASSISTANT_ID;
+  if (!assistantId || assistantId.trim() === '') {
+    console.error('OPENAI_ASSISTANT_ID not found or empty');
+    
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ 
+        error: 'OpenAI Assistant ID not configured. Please set OPENAI_ASSISTANT_ID environment variable.',
+        debug: {
+          hasAssistantId: !!assistantId,
+          envVars: Object.keys(process.env).filter(key => key.includes('ASSISTANT')),
+        }
+       }),
+    };
+  }
   try {
     const { message, threadId } = JSON.parse(event.body || '{}');
     console.log('Parsed request:', { 
@@ -110,7 +126,7 @@ exports.handler = async (event, context) => {
     // Run the assistant
     console.log('Running assistant:', ASSISTANT_ID);
     const run = await openai.beta.threads.runs.create(currentThreadId, {
-      assistant_id: ASSISTANT_ID,
+      assistant_id: assistantId.trim(),
     });
 
     // Wait for the run to complete
@@ -187,7 +203,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ 
         error: 'Failed to get response from OpenAI assistant',
         details: error.message,
-        assistant_id: ASSISTANT_ID,
+        assistant_id: assistantId,
         debug: 'Check Netlify function logs for details'
       }),
     };
