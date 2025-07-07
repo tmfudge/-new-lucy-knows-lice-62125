@@ -1,8 +1,14 @@
 [build]
 functions = "netlify/functions"
-command = "npx vite build"
+command = "npm run build"
 publish = "dist"
 
 [build.environment]
 OPENAI_API_KEY = "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"
 OPENAI_ASSISTANT_ID = "asst_Fv2AnQUuoOtffPwVp2GRPUSh"
+
+# Handle client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
