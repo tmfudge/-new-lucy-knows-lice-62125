@@ -1,9 +1,3 @@
-const OpenAI = require('openai');
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 exports.handler = async (event, context) => {
   // Enable CORS
   const headers = {
@@ -29,17 +23,7 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Check for required environment variables
-  if (!process.env.OPENAI_API_KEY) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: 'OpenAI API key not configured' }),
-    };
-  }
-
   try {
-    // For now, return a simple response since voice processing is complex in serverless
     return {
       statusCode: 200,
       headers,
