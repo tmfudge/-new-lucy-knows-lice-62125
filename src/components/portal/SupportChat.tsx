@@ -213,6 +213,11 @@ const SupportChat: React.FC = () => {
       console.log('Sending message to assistant:', messageText);
       console.log('Current threadId:', threadId);
       
+      // Ensure we send a valid threadId or null
+      const validThreadId = threadId && 
+                           typeof threadId === 'string' && 
+                           threadId.startsWith('thread_') ? threadId : null;
+      
       const response = await fetch('/.netlify/functions/chat', {
         method: 'POST',
         headers: {
@@ -220,7 +225,7 @@ const SupportChat: React.FC = () => {
         },
         body: JSON.stringify({
           message: messageText,
-          threadId: threadId || null, // Ensure we send null instead of undefined
+          threadId: validThreadId,
         }),
       });
 
@@ -239,9 +244,12 @@ const SupportChat: React.FC = () => {
         throw new Error(data.error);
       }
 
-      // Update thread ID if provided
-      if (data.threadId) {
+      // Update thread ID if provided and valid
+      if (data.threadId && 
+          typeof data.threadId === 'string' && 
+          data.threadId.startsWith('thread_')) {
         setThreadId(data.threadId);
+        console.log('Updated threadId to:', data.threadId);
       }
 
       const assistantMessage: Message = {

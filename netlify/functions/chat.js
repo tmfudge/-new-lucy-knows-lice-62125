@@ -89,9 +89,18 @@ exports.handler = async (event, context) => {
     const { message, threadId } = JSON.parse(event.body || '{}');
     console.log('Parsed request:', { 
       message: message?.substring(0, 50), 
-      threadId, 
-      threadIdType: typeof threadId 
+      threadId,
+      threadIdType: typeof threadId,
+      threadIdValue: threadId
     });
+
+    // More robust thread ID validation
+    const isValidThreadId = threadId && 
+                           typeof threadId === 'string' && 
+                           threadId !== 'undefined' && 
+                           threadId !== 'null' && 
+                           threadId.trim() !== '' &&
+                           threadId.startsWith('thread_');
 
     if (!message) {
       return {
@@ -108,13 +117,8 @@ exports.handler = async (event, context) => {
       apiKey: apiKey.trim(),
     });
 
-    // Fix thread ID handling
-    let currentThreadId = threadId;
-    if (!currentThreadId || currentThreadId === 'undefined' || currentThreadId === 'null' || currentThreadId === '') {
-      currentThreadId = null;
-    }
-
-    console.log('Processed threadId:', currentThreadId);
+    let currentThreadId = isValidThreadId ? threadId : null;
+    console.log('Using threadId:', currentThreadId, 'isValid:', isValidThreadId);
 
     // Create a new thread if we don't have one
     if (!currentThreadId) {
@@ -122,12 +126,18 @@ exports.handler = async (event, context) => {
       const thread = await openai.beta.threads.create();
       currentThreadId = thread.id;
       console.log('Created thread:', currentThreadId);
+      console.log('Thread object:', JSON.stringify(thread, null, 2));
     } else {
       console.log('Using existing thread:', currentThreadId);
     }
 
     // Add the user's message to the thread
     console.log('Adding message to thread:', currentThreadId);
+    
+    if (!currentThreadId || !currentThreadId.startsWith('thread_')) {
+      throw new Error(`Invalid thread ID: ${currentThreadId}`);
+    }
+    
     await openai.beta.threads.messages.create(currentThreadId, {
       role: 'user',
       content: message,
@@ -171,6 +181,11 @@ exports.handler = async (event, context) => {
           body: JSON.stringify({
             response: response,
             threadId: currentThreadId,
+            debug: {
+              messageLength: response.length,
+              threadIdValid: currentThreadId && currentThreadId.startsWith('thread_'),
+              runStatus: runStatus.status
+            }
           }),
         };
       } else {
@@ -193,6 +208,15 @@ exports.handler = async (event, context) => {
     console.error('Error type:', error.constructor.name);
     console.error('Error message:', error.message);
     console.error('Error stack:', error.stack);
+    
+    // Log the specific error details for thread ID issues
+    if (error.message.includes('thread_id')) {
+      console.error('Thread ID error details:');
+      console.error('- Original threadId from request:', threadId);
+      console.error('- Processed currentThreadId:', currentThreadId);
+      console.error('- threadId type:', typeof threadId);
+      console.error('- threadId value:', JSON.stringify(threadId));
+    }
     
     // Check if it's an API key issue
     if (error.message.includes('401') || error.message.includes('authentication')) {
