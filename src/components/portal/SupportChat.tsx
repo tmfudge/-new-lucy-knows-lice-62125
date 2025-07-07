@@ -1,52 +1,28 @@
-import React, { useState } from 'react';
-import { MessageCircle, Send, Phone, Mail, Clock, User, Bot } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { MessageCircle, Send, Phone, Mail, Clock, User, Bot, Loader } from 'lucide-react';
 
 interface Message {
   id: string;
-  type: 'user' | 'support' | 'bot';
+  type: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  sender?: string;
 }
 
 const SupportChat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      type: 'bot',
-      content: "Hi! I'm Lucy's AI assistant. I can help with quick questions about lice treatment. For complex issues, I'll connect you with our human support team. How can I help you today?",
-      timestamp: new Date(Date.now() - 300000),
-    },
-    {
-      id: '2',
-      type: 'user',
-      content: "I found lice on my daughter but I'm not sure if the treatment is working. It's been 2 days.",
-      timestamp: new Date(Date.now() - 240000),
-    },
-    {
-      id: '3',
-      type: 'support',
-      content: "Hi! This is Sarah from Lucy's support team. It's completely normal to feel uncertain after 2 days. Can you tell me what you're seeing? Are there still live lice moving around, or are you seeing dead ones?",
-      timestamp: new Date(Date.now() - 180000),
-      sender: 'Sarah M.'
-    },
-    {
-      id: '4',
-      type: 'user',
-      content: "I see some dead ones when I comb, but I'm worried I might have missed some areas. Should I retreat?",
-      timestamp: new Date(Date.now() - 120000),
-    },
-    {
-      id: '5',
-      type: 'support',
-      content: "Seeing dead lice is actually a great sign! It means the treatment is working. The key question is: do you see any LIVE lice moving around? If not, you're on track. Day 3 is your critical recheck day - that's when you'll know for sure if you need to retreat.",
-      timestamp: new Date(Date.now() - 60000),
-      sender: 'Sarah M.'
+      type: 'assistant',
+      content: "Hi! I'm Lucy's AI assistant, specially trained to help with lice treatment questions. I can provide guidance on treatment methods, answer questions about the process, and help troubleshoot any issues you're experiencing. How can I help you today?",
+      timestamp: new Date(),
     }
   ]);
 
   const [newMessage, setNewMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [threadId, setThreadId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickResponses = [
     "Is the treatment working?",
@@ -57,79 +33,85 @@ const SupportChat: React.FC = () => {
     "What if I find lice again?"
   ];
 
-  const supportTeam = [
-    {
-      name: 'Sarah M.',
-      role: 'Senior Lice Specialist',
-      status: 'online',
-      avatar: '👩‍⚕️',
-      specialties: ['Treatment protocols', 'Family screening']
-    },
-    {
-      name: 'Mike R.',
-      role: 'Parent Support Specialist',
-      status: 'online',
-      avatar: '👨‍💼',
-      specialties: ['Anxiety support', 'School issues']
-    },
-    {
-      name: 'Dr. Lisa K.',
-      role: 'Medical Consultant',
-      status: 'away',
-      avatar: '👩‍⚕️',
-      specialties: ['Medical questions', 'Allergic reactions']
-    }
-  ];
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-  const faqItems = [
-    {
-      question: "How long does treatment take?",
-      answer: "Most families see complete elimination within 24-48 hours when following our protocol correctly."
-    },
-    {
-      question: "Is it normal to see dead lice after treatment?",
-      answer: "Yes! Dead lice are a sign the treatment is working. They'll fall out during combing over the next few days."
-    },
-    {
-      question: "When should I check other family members?",
-      answer: "Check everyone within 24 hours of finding the first case. Focus on those who share beds or have close contact."
-    },
-    {
-      question: "Can lice come back after treatment?",
-      answer: "Lice can return if you miss the 21-day recheck cycle or if there's reexposure. Following our calendar prevents this."
-    }
-  ];
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-  const sendMessage = () => {
-    if (!newMessage.trim()) return;
+  const sendMessage = async (messageText?: string) => {
+    const textToSend = messageText || newMessage.trim();
+    if (!textToSend || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
       type: 'user',
-      content: newMessage,
+      content: textToSend,
       timestamp: new Date()
     };
 
     setMessages(prev => [...prev, userMessage]);
     setNewMessage('');
-    setIsTyping(true);
+    setIsLoading(true);
+    setError(null);
 
-    // Simulate support response
-    setTimeout(() => {
-      const supportMessage: Message = {
+    try {
+      const response = await fetch('/.netlify/functions/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: textToSend,
+          threadId: threadId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Update thread ID if this is the first message
+      if (data.threadId && !threadId) {
+        setThreadId(data.threadId);
+      }
+
+      const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        type: 'support',
-        content: "Thanks for your message! I can see you're dealing with a common concern. Let me help you with that right away. Based on what you've described, here's what I recommend...",
-        timestamp: new Date(),
-        sender: 'Sarah M.'
+        type: 'assistant',
+        content: data.response,
+        timestamp: new Date()
       };
-      setMessages(prev => [...prev, supportMessage]);
-      setIsTyping(false);
-    }, 2000);
+
+      setMessages(prev => [...prev, assistantMessage]);
+
+    } catch (error) {
+      console.error('Chat error:', error);
+      setError(error instanceof Error ? error.message : 'Failed to send message');
+      
+      // Add error message to chat
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'assistant',
+        content: "I'm sorry, I'm having trouble responding right now. Please try again in a moment, or contact our support team directly if the issue persists.",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const sendQuickResponse = (response: string) => {
-    setNewMessage(response);
+    sendMessage(response);
   };
 
   return (
@@ -138,10 +120,10 @@ const SupportChat: React.FC = () => {
       <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
         <div className="flex items-center mb-4">
           <MessageCircle className="w-8 h-8 text-green-600 mr-3" />
-          <h1 className="text-3xl font-bold text-green-800">Support Chat</h1>
+          <h1 className="text-3xl font-bold text-green-800">AI Support Chat</h1>
         </div>
         <p className="text-green-700 text-lg">
-          Get instant help from our lice specialists. We're here to support you through every step.
+          Get instant help from Lucy's AI assistant, specially trained on lice treatment methods and protocols.
         </p>
       </div>
 
@@ -154,11 +136,11 @@ const SupportChat: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                    L
+                    <Bot className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Lucy's Support Team</h3>
-                    <p className="text-sm text-green-600">● Online - Average response: 2 minutes</p>
+                    <h3 className="font-bold text-gray-900">Lucy's AI Assistant</h3>
+                    <p className="text-sm text-green-600">● Online - Specialized in lice treatment</p>
                   </div>
                 </div>
                 <div className="flex space-x-2">
@@ -179,25 +161,17 @@ const SupportChat: React.FC = () => {
                   <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                     message.type === 'user' 
                       ? 'bg-blue-500 text-white' 
-                      : message.type === 'bot'
-                      ? 'bg-gray-100 text-gray-800'
                       : 'bg-green-100 text-green-800'
                   }`}>
-                    {message.type !== 'user' && (
+                    {message.type === 'assistant' && (
                       <div className="flex items-center mb-1">
-                        {message.type === 'bot' ? (
-                          <Bot className="w-4 h-4 mr-2" />
-                        ) : (
-                          <User className="w-4 h-4 mr-2" />
-                        )}
-                        <span className="text-xs font-medium">
-                          {message.type === 'bot' ? 'AI Assistant' : message.sender}
-                        </span>
+                        <Bot className="w-4 h-4 mr-2" />
+                        <span className="text-xs font-medium">Lucy's AI Assistant</span>
                       </div>
                     )}
-                    <p className="text-sm">{message.content}</p>
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                     <p className={`text-xs mt-1 ${
-                      message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
+                      message.type === 'user' ? 'text-blue-100' : 'text-green-600'
                     }`}>
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
@@ -205,22 +179,30 @@ const SupportChat: React.FC = () => {
                 </div>
               ))}
               
-              {isTyping && (
+              {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg">
+                  <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg">
                     <div className="flex items-center">
-                      <User className="w-4 h-4 mr-2" />
-                      <span className="text-xs font-medium">Sarah M.</span>
+                      <Bot className="w-4 h-4 mr-2" />
+                      <span className="text-xs font-medium">Lucy's AI Assistant</span>
                     </div>
-                    <div className="flex space-x-1 mt-1">
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="flex items-center mt-1">
+                      <Loader className="w-4 h-4 animate-spin mr-2" />
+                      <span className="text-sm">Thinking...</span>
                     </div>
                   </div>
                 </div>
               )}
+              
+              <div ref={messagesEndRef} />
             </div>
+
+            {/* Error Display */}
+            {error && (
+              <div className="border-t border-gray-200 p-4 bg-red-50">
+                <p className="text-red-600 text-sm">⚠️ {error}</p>
+              </div>
+            )}
 
             {/* Quick Responses */}
             <div className="border-t border-gray-200 p-4">
@@ -230,7 +212,8 @@ const SupportChat: React.FC = () => {
                   <button
                     key={index}
                     onClick={() => sendQuickResponse(response)}
-                    className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full transition-colors"
+                    disabled={isLoading}
+                    className="text-xs bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-gray-700 px-3 py-1 rounded-full transition-colors"
                   >
                     {response}
                   </button>
@@ -245,15 +228,17 @@ const SupportChat: React.FC = () => {
                   type="text"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                  placeholder="Type your message..."
-                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+                  placeholder="Ask me anything about lice treatment..."
+                  disabled={isLoading}
+                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-50"
                 />
                 <button
-                  onClick={sendMessage}
-                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors"
+                  onClick={() => sendMessage()}
+                  disabled={isLoading || !newMessage.trim()}
+                  className="bg-green-500 hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed text-white p-2 rounded-lg transition-colors"
                 >
-                  <Send className="w-5 h-5" />
+                  {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </div>
             </div>
@@ -262,73 +247,66 @@ const SupportChat: React.FC = () => {
 
         {/* Sidebar */}
         <div>
-          {/* Support Team */}
+          {/* AI Assistant Info */}
           <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Support Team</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">About Lucy's AI Assistant</h3>
             <div className="space-y-4">
-              {supportTeam.map((member, index) => (
-                <div key={index} className="flex items-start">
-                  <div className="text-2xl mr-3">{member.avatar}</div>
-                  <div className="flex-1">
-                    <div className="flex items-center">
-                      <h4 className="font-medium text-gray-900">{member.name}</h4>
-                      <div className={`w-2 h-2 rounded-full ml-2 ${
-                        member.status === 'online' ? 'bg-green-500' : 'bg-yellow-500'
-                      }`} />
-                    </div>
-                    <p className="text-sm text-gray-600">{member.role}</p>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {member.specialties.join(', ')}
-                    </div>
-                  </div>
+              <div className="flex items-start">
+                <div className="text-2xl mr-3">🤖</div>
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900">Specialized Knowledge</h4>
+                  <p className="text-sm text-gray-600">Trained specifically on lice treatment methods, protocols, and troubleshooting</p>
                 </div>
-              ))}
+              </div>
+              <div className="flex items-start">
+                <div className="text-2xl mr-3">⚡</div>
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900">Instant Responses</h4>
+                  <p className="text-sm text-gray-600">Get immediate answers to your lice treatment questions</p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <div className="text-2xl mr-3">🎯</div>
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900">Personalized Help</h4>
+                  <p className="text-sm text-gray-600">Tailored advice based on your specific situation</p>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Contact Options */}
           <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Other Ways to Reach Us</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Need Human Support?</h3>
             <div className="space-y-3">
-              <button className="w-full flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                <Phone className="w-5 h-5 text-blue-500 mr-3" />
-                <div className="text-left">
-                  <div className="font-medium text-gray-900">Phone Support</div>
-                  <div className="text-sm text-gray-600">1-800-LUCY-HELP</div>
-                </div>
-              </button>
-              
               <button className="w-full flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                 <Mail className="w-5 h-5 text-green-500 mr-3" />
                 <div className="text-left">
                   <div className="font-medium text-gray-900">Email Support</div>
-                  <div className="text-sm text-gray-600">help@lucyknowslice.com</div>
+                  <div className="text-sm text-gray-600">hello@lucyknowslice.com</div>
                 </div>
               </button>
               
               <div className="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <Clock className="w-5 h-5 text-blue-500 mr-3" />
                 <div>
-                  <div className="font-medium text-blue-800">Support Hours</div>
-                  <div className="text-sm text-blue-600">24/7 Chat • 8AM-8PM Phone</div>
+                  <div className="font-medium text-blue-800">AI Available 24/7</div>
+                  <div className="text-sm text-blue-600">Human support: 8AM-8PM EST</div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* FAQ */}
-          <div className="bg-white border border-gray-200 rounded-xl p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Answers</h3>
-            <div className="space-y-3">
-              {faqItems.map((item, index) => (
-                <details key={index} className="group">
-                  <summary className="font-medium text-gray-900 cursor-pointer hover:text-green-600 transition-colors">
-                    {item.question}
-                  </summary>
-                  <p className="text-sm text-gray-600 mt-2 pl-4">{item.answer}</p>
-                </details>
-              ))}
-            </div>
+          {/* Tips */}
+          <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+            <h3 className="text-lg font-bold text-green-800 mb-4">💡 Chat Tips</h3>
+            <ul className="text-green-700 space-y-2 text-sm">
+              <li>• Be specific about your situation</li>
+              <li>• Mention what day of treatment you're on</li>
+              <li>• Describe what you're seeing</li>
+              <li>• Ask about next steps if unsure</li>
+              <li>• Use the quick questions for common issues</li>
+            </ul>
           </div>
         </div>
       </div>
