@@ -41,104 +41,22 @@ exports.handler = async (event, context) => {
 
     console.log('Received message:', message);
     console.log('Thread ID:', threadId);
-    console.log('OpenAI API Key available:', !!process.env.OPENAI_API_KEY);
-    console.log('Environment variables:', Object.keys(process.env));
 
-    // Check if OpenAI API key is available
-    if (!process.env.OPENAI_API_KEY) {
-      console.log('OpenAI API key not found, using Lucy-specific fallback response');
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({
-          response: generateLucyResponse(message),
-          threadId: threadId || `lucy_${Date.now()}`,
-          note: "Using Lucy's knowledge base - OpenAI API key not configured"
-        }),
-      };
-    }
-
-    // Initialize OpenAI client only when API key is available
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-
-    let thread;
-    
-    // Create or retrieve thread
-    if (threadId && threadId.startsWith('thread_')) {
-      try {
-        // Try to retrieve existing thread
-        thread = await openai.beta.threads.retrieve(threadId);
-        console.log('Retrieved existing thread:', threadId);
-      } catch (error) {
-        console.log('Thread not found, creating new one');
-        thread = await openai.beta.threads.create();
-      }
-    } else {
-      // Create new thread
-      thread = await openai.beta.threads.create();
-      console.log('Created new thread:', thread.id);
-    }
-
-    // Add message to thread
-    await openai.beta.threads.messages.create(thread.id, {
-      role: "user",
-      content: message
-    });
-
-    // Run the assistant
-    const run = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: ASSISTANT_ID,
-    });
-
-    // Wait for completion
-    let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
-    
-    // Poll for completion (with timeout)
-    let attempts = 0;
-    const maxAttempts = 30; // 30 seconds timeout
-    
-    while (runStatus.status === 'queued' || runStatus.status === 'in_progress') {
-      if (attempts >= maxAttempts) {
-        throw new Error('Assistant response timeout');
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
-      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
-      attempts++;
-    }
-
-    if (runStatus.status === 'completed') {
-      // Get the assistant's response
-      const messages = await openai.beta.threads.messages.list(thread.id);
-      const assistantMessage = messages.data.find(msg => msg.role === 'assistant' && msg.run_id === run.id);
-      
-      if (assistantMessage && assistantMessage.content[0]?.type === 'text') {
-        const response = assistantMessage.content[0].text.value;
-        
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({
-            response: response,
-            threadId: thread.id,
-          }),
-        };
-      } else {
-        throw new Error('No valid response from assistant');
-      }
-    } else if (runStatus.status === 'failed') {
-      console.error('Assistant run failed:', runStatus.last_error);
-      throw new Error(`Assistant run failed: ${runStatus.last_error?.message || 'Unknown error'}`);
-    } else {
-      throw new Error(`Unexpected run status: ${runStatus.status}`);
-    }
+    // ALWAYS use Lucy's custom responses - no OpenAI fallback for now
+    console.log('Using Lucy\'s custom response system');
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        response: generateLucyResponse(message),
+        threadId: threadId || `lucy_${Date.now()}`,
+      }),
+    };
 
   } catch (error) {
     console.error('Chat function error:', error);
     
-    // If OpenAI fails, fall back to Lucy's responses
+    // Even on error, use Lucy's responses
     const { message } = JSON.parse(event.body || '{}');
     
     return {
@@ -147,8 +65,6 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({
         response: generateLucyResponse(message || ''),
         threadId: `lucy_${Date.now()}`,
-        note: "Using Lucy's knowledge base due to API issue",
-        error: error.message
       }),
     };
   }
