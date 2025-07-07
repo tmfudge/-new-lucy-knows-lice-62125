@@ -35,4 +35,4 @@ MoneyBackGuarantee.tsx - Guarantee details
 FinalCTA.tsx - Final call to action
 Disclaimer.tsx - Footer and legal
 # Trigger deployment to pick up new environment variables
-Deployment trigger - Updated with OpenAI API key
+Deployment trigger - Updated with OpenAI API key and Assistant ID
