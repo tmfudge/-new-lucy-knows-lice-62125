@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MessageCircle, Send, Phone, Mail, Clock, User, Bot, Loader } from 'lucide-react';
+import { MessageCircle, Send, Phone, Mail, Clock, User, Bot, Loader, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 
 interface Message {
   id: string;
   type: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  isVoice?: boolean;
 }
 
 const SupportChat: React.FC = () => {
@@ -13,7 +14,7 @@ const SupportChat: React.FC = () => {
     {
       id: '1',
       type: 'assistant',
-      content: "Hi! I'm Lucy's AI assistant, specially trained to help with lice treatment questions. I can provide guidance on treatment methods, answer questions about the process, and help troubleshoot any issues you're experiencing. How can I help you today?",
+      content: "Hi! I'm Lucy's AI assistant, specially trained to help with lice treatment questions. I can provide guidance on treatment methods, answer questions about the process, and help troubleshoot any issues you're experiencing. You can type your questions or use the voice chat feature. How can I help you today?",
       timestamp: new Date(),
     }
   ]);
@@ -23,6 +24,13 @@ const SupportChat: React.FC = () => {
   const [threadId, setThreadId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Voice chat states
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
 
   const quickResponses = [
     "Is the treatment working?",
@@ -41,6 +49,138 @@ const SupportChat: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Initialize speech recognition and synthesis
+  useEffect(() => {
+    // Check if browser supports speech synthesis
+    if (!('speechSynthesis' in window)) {
+      setVoiceEnabled(false);
+      console.warn('Speech synthesis not supported');
+    }
+
+    // Check if browser supports media recording
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setVoiceEnabled(false);
+      console.warn('Media recording not supported');
+    }
+  }, []);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          setAudioChunks(prev => [...prev, event.data]);
+        }
+      };
+
+      recorder.onstop = () => {
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      setMediaRecorder(recorder);
+      setAudioChunks([]);
+      recorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      setError('Could not access microphone. Please check permissions.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const processVoiceMessage = async () => {
+    if (audioChunks.length === 0) return;
+
+    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+    setAudioChunks([]);
+
+    // Convert audio to text using OpenAI Whisper
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'recording.webm');
+
+    try {
+      setIsLoading(true);
+      const response = await fetch('/.netlify/functions/voice-chat', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Add transcribed message as user message
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        type: 'user',
+        content: data.transcription,
+        timestamp: new Date(),
+        isVoice: true
+      };
+
+      setMessages(prev => [...prev, userMessage]);
+
+      // Send to assistant and get response
+      await sendMessageToAssistant(data.transcription, true);
+
+    } catch (error) {
+      console.error('Voice processing error:', error);
+      setError('Failed to process voice message. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const speakText = (text: string) => {
+    if (!voiceEnabled || !('speechSynthesis' in window)) return;
+
+    // Stop any current speech
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    utterance.volume = 0.8;
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    // Try to use a female voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const femaleVoice = voices.find(voice => 
+      voice.name.toLowerCase().includes('female') || 
+      voice.name.toLowerCase().includes('woman') ||
+      voice.name.toLowerCase().includes('samantha') ||
+      voice.name.toLowerCase().includes('karen')
+    );
+    
+    if (femaleVoice) {
+      utterance.voice = femaleVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const stopSpeaking = () => {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+  };
+
   const sendMessage = async (messageText?: string) => {
     const textToSend = messageText || newMessage.trim();
     if (!textToSend || isLoading) return;
@@ -54,6 +194,11 @@ const SupportChat: React.FC = () => {
 
     setMessages(prev => [...prev, userMessage]);
     setNewMessage('');
+
+    await sendMessageToAssistant(textToSend, false);
+  };
+
+  const sendMessageToAssistant = async (messageText: string, isVoiceMessage: boolean) => {
     setIsLoading(true);
     setError(null);
 
@@ -64,7 +209,7 @@ const SupportChat: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: textToSend,
+          message: messageText,
           threadId: threadId,
         }),
       });
@@ -88,10 +233,16 @@ const SupportChat: React.FC = () => {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
         content: data.response,
-        timestamp: new Date()
+        timestamp: new Date(),
+        isVoice: isVoiceMessage
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+
+      // Speak the response if it was a voice message
+      if (isVoiceMessage && voiceEnabled) {
+        speakText(data.response);
+      }
 
     } catch (error) {
       console.error('Chat error:', error);
@@ -114,6 +265,13 @@ const SupportChat: React.FC = () => {
     sendMessage(response);
   };
 
+  // Handle recording completion
+  useEffect(() => {
+    if (mediaRecorder && mediaRecorder.state === 'inactive' && audioChunks.length > 0) {
+      processVoiceMessage();
+    }
+  }, [mediaRecorder?.state, audioChunks.length]);
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
@@ -123,7 +281,7 @@ const SupportChat: React.FC = () => {
           <h1 className="text-3xl font-bold text-green-800">AI Support Chat</h1>
         </div>
         <p className="text-green-700 text-lg">
-          Get instant help from Lucy's AI assistant, specially trained on lice treatment methods and protocols.
+          Get instant help from Lucy's AI assistant with text or voice chat. Specially trained on lice treatment methods and protocols.
         </p>
       </div>
 
@@ -140,10 +298,23 @@ const SupportChat: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900">Lucy's AI Assistant</h3>
-                    <p className="text-sm text-green-600">● Online - Specialized in lice treatment</p>
+                    <p className="text-sm text-green-600">● Online - Voice & Text Chat Available</p>
                   </div>
                 </div>
                 <div className="flex space-x-2">
+                  {voiceEnabled && (
+                    <button
+                      onClick={isSpeaking ? stopSpeaking : () => {}}
+                      className={`p-2 rounded-lg transition-colors ${
+                        isSpeaking 
+                          ? 'bg-red-100 text-red-600 hover:bg-red-200' 
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                      title={isSpeaking ? 'Stop speaking' : 'Voice enabled'}
+                    >
+                      {isSpeaking ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                    </button>
+                  )}
                   <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
                     <Phone className="w-5 h-5" />
                   </button>
@@ -167,9 +338,15 @@ const SupportChat: React.FC = () => {
                       <div className="flex items-center mb-1">
                         <Bot className="w-4 h-4 mr-2" />
                         <span className="text-xs font-medium">Lucy's AI Assistant</span>
+                        {message.isVoice && <Volume2 className="w-3 h-3 ml-2" />}
                       </div>
                     )}
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <div className="flex items-start justify-between">
+                      <p className="text-sm whitespace-pre-wrap flex-1">{message.content}</p>
+                      {message.isVoice && message.type === 'user' && (
+                        <Mic className="w-3 h-3 ml-2 mt-1 opacity-60" />
+                      )}
+                    </div>
                     <p className={`text-xs mt-1 ${
                       message.type === 'user' ? 'text-blue-100' : 'text-green-600'
                     }`}>
@@ -188,7 +365,9 @@ const SupportChat: React.FC = () => {
                     </div>
                     <div className="flex items-center mt-1">
                       <Loader className="w-4 h-4 animate-spin mr-2" />
-                      <span className="text-sm">Thinking...</span>
+                      <span className="text-sm">
+                        {isRecording ? 'Processing voice...' : 'Thinking...'}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -233,6 +412,23 @@ const SupportChat: React.FC = () => {
                   disabled={isLoading}
                   className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-50"
                 />
+                
+                {/* Voice Button */}
+                {voiceEnabled && (
+                  <button
+                    onClick={isRecording ? stopRecording : startRecording}
+                    disabled={isLoading}
+                    className={`p-2 rounded-lg transition-colors ${
+                      isRecording 
+                        ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' 
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    title={isRecording ? 'Stop recording' : 'Start voice message'}
+                  >
+                    {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                  </button>
+                )}
+                
                 <button
                   onClick={() => sendMessage()}
                   disabled={isLoading || !newMessage.trim()}
@@ -241,6 +437,12 @@ const SupportChat: React.FC = () => {
                   {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </div>
+              
+              {voiceEnabled && (
+                <p className="text-xs text-gray-500 mt-2 text-center">
+                  💡 Click the microphone to send a voice message
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -259,6 +461,13 @@ const SupportChat: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-start">
+                <div className="text-2xl mr-3">🎤</div>
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900">Voice Chat</h4>
+                  <p className="text-sm text-gray-600">Speak naturally and get spoken responses back</p>
+                </div>
+              </div>
+              <div className="flex items-start">
                 <div className="text-2xl mr-3">⚡</div>
                 <div className="flex-1">
                   <h4 className="font-medium text-gray-900">Instant Responses</h4>
@@ -274,6 +483,32 @@ const SupportChat: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Voice Features */}
+          {voiceEnabled && (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+              <h3 className="text-lg font-bold text-blue-800 mb-4">🎤 Voice Features</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-blue-700">Voice Input</span>
+                  <span className="text-green-600 font-medium">✓ Active</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-blue-700">Voice Output</span>
+                  <span className="text-green-600 font-medium">✓ Active</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-blue-700">Auto-Speak Responses</span>
+                  <button
+                    onClick={() => setVoiceEnabled(!voiceEnabled)}
+                    className="text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    {voiceEnabled ? 'Disable' : 'Enable'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Contact Options */}
           <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6">
@@ -305,6 +540,7 @@ const SupportChat: React.FC = () => {
               <li>• Mention what day of treatment you're on</li>
               <li>• Describe what you're seeing</li>
               <li>• Ask about next steps if unsure</li>
+              <li>• Use voice for hands-free help</li>
               <li>• Use the quick questions for common issues</li>
             </ul>
           </div>
