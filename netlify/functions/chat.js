@@ -28,9 +28,26 @@ exports.handler = async (event, context) => {
   try {
     const { message, threadId } = JSON.parse(event.body || '{}');
 
+    // Debug: Log what environment variables we can see
+    console.log('Environment check:', {
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+      keyLength: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.length : 0,
+      hasAssistantId: !!process.env.OPENAI_ASSISTANT_ID,
+      allEnvKeys: Object.keys(process.env).filter(k => k.includes('OPENAI') || k.includes('openai')),
+      context: process.env.CONTEXT || 'unknown'
+    });
+
     // Check if OpenAI API key is configured
-    if (!process.env.OPENAI_API_KEY) {
-      console.log('OpenAI API key not found. Available env vars:', Object.keys(process.env).filter(k => k.includes('OPENAI')));
+    const apiKey = process.env.OPENAI_API_KEY;
+    const assistantId = process.env.OPENAI_ASSISTANT_ID;
+
+    if (!apiKey || !assistantId) {
+      console.log('Missing OpenAI credentials:', {
+        hasKey: !!apiKey,
+        keyLength: apiKey ? apiKey.length : 0,
+        hasAssistantId: !!assistantId,
+        envVars: Object.keys(process.env).filter(k => k.toLowerCase().includes('openai'))
+      });
       
       // Return helpful fallback response
       const fallbackResponses = [
@@ -59,14 +76,19 @@ exports.handler = async (event, context) => {
 
     // Initialize OpenAI client
     const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: apiKey,
     });
 
     let thread;
     
     // Create or use existing thread
     if (threadId && threadId.startsWith('thread_')) {
-      thread = { id: threadId };
+      try {
+        thread = { id: threadId };
+      } catch (error) {
+        console.log('Invalid thread ID, creating new thread');
+        thread = await openai.beta.threads.create();
+      }
     } else {
       thread = await openai.beta.threads.create();
     }
@@ -79,15 +101,18 @@ exports.handler = async (event, context) => {
 
     // Run the assistant
     const run = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: process.env.OPENAI_ASSISTANT_ID,
+      assistant_id: assistantId,
     });
 
-    // Wait for completion
+    // Wait for completion with timeout
     let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+    let attempts = 0;
+    const maxAttempts = 30; // 30 seconds max
     
-    while (runStatus.status === 'in_progress' || runStatus.status === 'queued') {
+    while ((runStatus.status === 'in_progress' || runStatus.status === 'queued') && attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+      attempts++;
     }
 
     if (runStatus.status === 'completed') {
@@ -108,6 +133,7 @@ exports.handler = async (event, context) => {
     }
 
     // If we get here, something went wrong with the assistant
+    console.log('Assistant run failed:', runStatus);
     throw new Error(`Assistant run failed with status: ${runStatus.status}`);
 
   } catch (error) {
