@@ -28,7 +28,7 @@ export type PortalSection =
 
 function PortalContent() {
   const [activeSection, setActiveSection] = useState<PortalSection>('dashboard');
-  const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const renderContent = () => {
     switch (activeSection) {
@@ -60,7 +60,14 @@ function PortalContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50">
+      {/* Welcome message for testing */}
+      <div className="lg:hidden bg-blue-500 text-white p-4 text-center">
+        <h1 className="text-xl font-bold">Lucy's Portal - Mobile</h1>
+        <p>Tap the menu button below to navigate</p>
+      </div>
+      
+      <div className="flex min-h-screen">
       <Sidebar 
         activeSection={activeSection}
         setActiveSection={setActiveSection}
@@ -70,7 +77,7 @@ function PortalContent() {
       
       <div className="flex-1 flex flex-col lg:ml-64">
         {/* Mobile header */}
-        <div className="lg:hidden bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between sticky top-0 z-30">
+        <div className="lg:hidden bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-md text-gray-600 hover:bg-gray-100"
@@ -88,21 +95,15 @@ function PortalContent() {
         </div>
 
         {/* Main content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto bg-white lg:bg-gray-50">
+          {/* Desktop welcome message */}
+          <div className="hidden lg:block bg-blue-500 text-white p-4 text-center">
+            <h1 className="text-2xl font-bold">Welcome to Lucy's Portal!</h1>
+            <p>Use the sidebar on the left to navigate to different sections</p>
+          </div>
           {renderContent()}
         </main>
       </div>
-      
-      {/* Desktop sidebar toggle for debugging */}
-      <div className="hidden lg:block fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="bg-orange-500 text-white p-2 rounded-lg shadow-lg hover:bg-orange-600 transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
       </div>
     </div>
   );

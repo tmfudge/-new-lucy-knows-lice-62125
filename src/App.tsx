@@ -14,7 +14,8 @@ function App() {
         <Route path="/privacy" element={<Terms />} />
         <Route path="/disclaimers" element={<Terms />} />
         <Route path="/legal" element={<Terms />} />
-        {/* Portal route commented out - will reactivate when ready for portal launch */}
+        {/* Portal route - active for testing */}
+        <Route path="/portal" element={<Portal />} />
         <Route path="/portal/*" element={<Portal />} />
       </Routes>
     </Router>
