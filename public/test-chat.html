@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Function Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            max-width: 800px;
+        }
+        .test-section { 
+            background: #f5f5f5; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin: 20px 0; 
+        }
+        .result { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin: 10px 0; 
+            border-left: 4px solid #007cba;
+        }
+        .error { 
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        .success { 
+            border-left-color: #28a745;
+            background: #f8fff8;
+        }
+        pre { 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        button { 
+            padding: 12px 24px; 
+            font-size: 16px; 
+            margin: 10px 5px; 
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007cba;
+            color: white;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Chat Function Test</h1>
+    <p>This page tests the OpenAI chat function to make sure everything is working correctly.</p>
+    
+    <div class="test-section">
+        <h2>Step 1: Test Environment Variables</h2>
+        <button onclick="testEnvVars()">Check Environment Variables</button>
+        <div id="env-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 2: Test Chat Function</h2>
+        <input type="text" id="test-message" placeholder="Enter a test message..." value="Hello! Can you help me with lice treatment?">
+        <br>
+        <button onclick="testChatFunction()">Send Test Message</button>
+        <div id="chat-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 3: Test Thread Continuity</h2>
+        <button onclick="testThreadContinuity()">Test Follow-up Message</button>
+        <div id="thread-result"></div>
+    </div>
+
+    <script>
+        let currentThreadId = null;
+
+        async function testEnvVars() {
+            const resultDiv = document.getElementById('env-result');
+            resultDiv.innerHTML = '<p>🔍 Checking environment variables...</p>';
+            
+            try {
+                const response = await fetch('/.netlify/functions/debug-env');
+                const data = await response.json();
+                
+                const hasRequired = data.hasOpenAIKey && data.hasAssistantId;
+                
+                resultDiv.innerHTML = `
+                    <div class="result ${hasRequired ? 'success' : 'error'}">
+                        <h3>${hasRequired ? '✅' : '❌'} Environment Variables Status:</h3>
+                        <p><strong>OpenAI API Key:</strong> ${data.hasOpenAIKey ? '✅ Found' : '❌ Missing'} ${data.openAIKeyPreview}</p>
+                        <p><strong>Assistant ID:</strong> ${data.hasAssistantId ? '✅ Found' : '❌ Missing'} ${data.assistantIdPreview}</p>
+                        <p><strong>Context:</strong> ${data.netlifyContext}</p>
+                        <details>
+                            <summary>Full Debug Info</summary>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </details>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Error checking environment variables:</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testChatFunction() {
+            const resultDiv = document.getElementById('chat-result');
+            const messageInput = document.getElementById('test-message');
+            const message = messageInput.value.trim();
+            
+            if (!message) {
+                alert('Please enter a test message');
+                return;
+            }
+            
+            resultDiv.innerHTML = '<p>💬 Sending message to chat function...</p>';
+            document.body.classList.add('loading');
+            
+            try {
+                const response = await fetch('/.netlify/functions/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        threadId: currentThreadId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.response) {
+                    currentThreadId = data.threadId;
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>✅ Chat Function Working!</h3>
+                            <p><strong>Your message:</strong> ${message}</p>
+                            <p><strong>AI Response:</strong> ${data.response}</p>
+                            <p><strong>Thread ID:</strong> ${data.threadId}</p>
+                            <details>
+                                <summary>Full Response</summary>
+                                <pre>${JSON.stringify(data, null, 2)}</pre>
+                            </details>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Chat Function Error:</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                document.body.classList.remove('loading');
+            }
+        }
+        
+        async function testThreadContinuity() {
+            const resultDiv = document.getElementById('thread-result');
+            
+            if (!currentThreadId) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ No Thread ID</h3>
+                        <p>Please run the chat function test first to create a thread.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            resultDiv.innerHTML = '<p>🔗 Testing thread continuity...</p>';
+            document.body.classList.add('loading');
+            
+            try {
+                const response = await fetch('/.netlify/functions/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: "What was my previous question about?",
+                        threadId: currentThreadId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.response) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>✅ Thread Continuity Working!</h3>
+                            <p><strong>Follow-up question:</strong> What was my previous question about?</p>
+                            <p><strong>AI Response:</strong> ${data.response}</p>
+                            <p><strong>Same Thread ID:</strong> ${data.threadId === currentThreadId ? '✅ Yes' : '❌ No'}</p>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Thread Continuity Error:</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                document.body.classList.remove('loading');
+            }
+        }
+
+        // Auto-run environment check on page load
+        window.addEventListener('load', () => {
+            testEnvVars();
+        });
+    </script>
+</body>
+</html>

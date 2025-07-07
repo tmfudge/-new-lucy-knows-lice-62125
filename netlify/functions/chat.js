@@ -11,45 +11,6 @@ exports.handler = async (event, context) => {
   console.log('=== CHAT FUNCTION CALLED ===');
   console.log('Method:', event.httpMethod);
   
-  // Check if we're in Netlify environment
-  console.log('=== NETLIFY ENVIRONMENT CHECK ===');
-  console.log('- NETLIFY:', process.env.NETLIFY);
-  console.log('- NETLIFY_DEV:', process.env.NETLIFY_DEV);
-  console.log('- CONTEXT:', process.env.CONTEXT);
-  console.log('- DEPLOY_PRIME_URL:', process.env.DEPLOY_PRIME_URL);
-  console.log('- URL:', process.env.URL);
-  
-  console.log('Environment check:');
-  console.log('- NODE_ENV:', process.env.NODE_ENV);
-  console.log('- NETLIFY_DEV:', process.env.NETLIFY_DEV);
-  console.log('- CONTEXT:', process.env.CONTEXT);
-  
-  // Log all environment variables that contain 'OPENAI' or 'ASSISTANT'
-  const relevantEnvVars = Object.keys(process.env).filter(key => 
-    key.includes('OPENAI') || key.includes('ASSISTANT')
-  );
-  
-  // Also check for any variables that might be prefixed
-  const allPossibleKeys = Object.keys(process.env).filter(key => 
-    key.includes('OPENAI') || key.includes('ASSISTANT')
-  );
-  console.log('- Relevant env vars found:', relevantEnvVars);
-  
-  // Check each relevant env var
-  relevantEnvVars.forEach(key => {
-    const value = process.env[key];
-    console.log(`- ${key}:`, value ? `${value.substring(0, 10)}...` : 'EMPTY');
-  });
-  
-  // Check for common variations
-  const variations = [
-    'OPENAI_API_KEY',
-    'OPENAI_ASSISTANT_ID',
-    'REACT_APP_OPENAI_API_KEY',
-    'VITE_OPENAI_API_KEY'
-  ];
-  console.log('Checking variations:', variations.map(key => `${key}: ${process.env[key] ? 'EXISTS' : 'MISSING'}`));
-
   // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -67,11 +28,24 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Check if OpenAI API key is available
-  const apiKey = process.env.OPENAI_API_KEY;
+  // More robust environment variable checking
+  const apiKey = process.env.OPENAI_API_KEY || process.env.REACT_APP_OPENAI_API_KEY || process.env.VITE_OPENAI_API_KEY;
+  const assistantId = process.env.OPENAI_ASSISTANT_ID || process.env.REACT_APP_OPENAI_ASSISTANT_ID || process.env.VITE_OPENAI_ASSISTANT_ID;
+  
+  console.log('Environment check:');
+  console.log('- API Key exists:', !!apiKey);
+  console.log('- API Key length:', apiKey ? apiKey.length : 0);
+  console.log('- Assistant ID exists:', !!assistantId);
+  console.log('- Assistant ID length:', assistantId ? assistantId.length : 0);
+  
   if (!apiKey || apiKey.trim() === '') {
-    console.error('OPENAI_API_KEY not found or empty');
-    console.error('All environment variables:', Object.keys(process.env).sort());
+    console.error('OPENAI_API_KEY not found');
+    
+    // Debug: show what env vars we do have
+    const envKeys = Object.keys(process.env).filter(key => 
+      key.includes('OPENAI') || key.includes('API') || key.includes('KEY')
+    );
+    console.error('Available env keys:', envKeys);
     
     return {
       statusCode: 500,
@@ -81,18 +55,15 @@ exports.handler = async (event, context) => {
         debug: {
           hasKey: !!apiKey,
           keyLength: apiKey ? apiKey.length : 0,
-          envVars: Object.keys(process.env).filter(key => key.includes('OPENAI')),
-          context: process.env.CONTEXT || 'unknown',
-          allEnvKeys: Object.keys(process.env).sort()
+          availableKeys: envKeys,
+          context: process.env.CONTEXT || 'unknown'
         }
       }),
     };
   }
 
-  // Check if Assistant ID is available
-  const assistantId = process.env.OPENAI_ASSISTANT_ID;
   if (!assistantId || assistantId.trim() === '') {
-    console.error('OPENAI_ASSISTANT_ID not found or empty');
+    console.error('OPENAI_ASSISTANT_ID not found');
     
     return {
       statusCode: 500,
@@ -101,8 +72,7 @@ exports.handler = async (event, context) => {
         error: 'OpenAI Assistant ID not configured. Please set OPENAI_ASSISTANT_ID environment variable.',
         debug: {
           hasAssistantId: !!assistantId,
-          envVars: Object.keys(process.env).filter(key => key.includes('ASSISTANT')),
-          allEnvKeys: Object.keys(process.env).sort()
+          context: process.env.CONTEXT || 'unknown'
         }
        }),
     };
@@ -112,20 +82,11 @@ exports.handler = async (event, context) => {
     const { message, threadId } = JSON.parse(event.body || '{}');
     console.log('Parsed request:', { 
       message: message?.substring(0, 50), 
-      threadId,
-      threadIdType: typeof threadId,
-      threadIdValue: threadId
+      threadId: threadId || 'null',
+      hasMessage: !!message
     });
 
-    // More robust thread ID validation
-    const isValidThreadId = threadId && 
-                           typeof threadId === 'string' && 
-                           threadId !== 'undefined' && 
-                           threadId !== 'null' && 
-                           threadId.trim() !== '' &&
-                           threadId.startsWith('thread_');
-
-    if (!message) {
+    if (!message || message.trim() === '') {
       return {
         statusCode: 400,
         headers,
@@ -133,41 +94,43 @@ exports.handler = async (event, context) => {
       };
     }
 
-    console.log('Initializing OpenAI client...');
-    
+    // Validate thread ID if provided
+    const isValidThreadId = threadId && 
+                           typeof threadId === 'string' && 
+                           threadId !== 'undefined' && 
+                           threadId !== 'null' && 
+                           threadId.trim() !== '' &&
+                           threadId.startsWith('thread_');
+
+    console.log('Thread ID validation:', { threadId, isValid: isValidThreadId });
+
     // Initialize OpenAI client
+    console.log('Initializing OpenAI client...');
     const openai = new OpenAI({
       apiKey: apiKey.trim(),
     });
 
     let currentThreadId = isValidThreadId ? threadId : null;
-    console.log('Using threadId:', currentThreadId, 'isValid:', isValidThreadId);
 
-    // Create a new thread if we don't have one
+    // Create a new thread if we don't have a valid one
     if (!currentThreadId) {
       console.log('Creating new thread...');
       const thread = await openai.beta.threads.create();
       currentThreadId = thread.id;
       console.log('Created thread:', currentThreadId);
-      console.log('Thread object:', JSON.stringify(thread, null, 2));
     } else {
       console.log('Using existing thread:', currentThreadId);
     }
 
     // Add the user's message to the thread
-    console.log('Adding message to thread:', currentThreadId);
-    
-    if (!currentThreadId || !currentThreadId.startsWith('thread_')) {
-      throw new Error(`Invalid thread ID: ${currentThreadId}`);
-    }
-    
+    console.log('Adding message to thread...');
     await openai.beta.threads.messages.create(currentThreadId, {
       role: 'user',
-      content: message,
+      content: message.trim(),
     });
 
     // Run the assistant
-    console.log('Running assistant:', assistantId);
+    console.log('Running assistant:', assistantId.substring(0, 10) + '...');
     const run = await openai.beta.threads.runs.create(currentThreadId, {
       assistant_id: assistantId.trim(),
     });
@@ -204,11 +167,6 @@ exports.handler = async (event, context) => {
           body: JSON.stringify({
             response: response,
             threadId: currentThreadId,
-            debug: {
-              messageLength: response.length,
-              threadIdValid: currentThreadId && currentThreadId.startsWith('thread_'),
-              runStatus: runStatus.status
-            }
           }),
         };
       } else {
@@ -232,24 +190,26 @@ exports.handler = async (event, context) => {
     console.error('Error message:', error.message);
     console.error('Error stack:', error.stack);
     
-    // Log the specific error details for thread ID issues
-    if (error.message.includes('thread_id')) {
-      console.error('Thread ID error details:');
-      console.error('- Original threadId from request:', threadId);
-      console.error('- Processed currentThreadId:', currentThreadId);
-      console.error('- threadId type:', typeof threadId);
-      console.error('- threadId value:', JSON.stringify(threadId));
-    }
-    
     // Check if it's an API key issue
-    if (error.message.includes('401') || error.message.includes('authentication')) {
+    if (error.message.includes('401') || error.message.includes('authentication') || error.message.includes('Incorrect API key')) {
       return {
         statusCode: 500,
         headers,
         body: JSON.stringify({ 
           error: 'OpenAI API authentication failed. Please check your API key.',
           details: error.message,
-          debug: 'API key may be invalid or expired'
+        }),
+      };
+    }
+    
+    // Check if it's an assistant ID issue
+    if (error.message.includes('assistant') && error.message.includes('not found')) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ 
+          error: 'OpenAI Assistant not found. Please check your Assistant ID.',
+          details: error.message,
         }),
       };
     }
@@ -260,7 +220,6 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ 
         error: 'Failed to get response from OpenAI assistant',
         details: error.message,
-        debug: 'Check Netlify function logs for details'
       }),
     };
   }
