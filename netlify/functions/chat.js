@@ -7,11 +7,6 @@ const headers = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 // Your custom assistant ID
 const ASSISTANT_ID = 'asst_iZFLhw33e3RWkihX9Zw23uX0';
 
@@ -52,10 +47,16 @@ exports.handler = async (event, context) => {
         headers,
         body: JSON.stringify({
           response: generateFallbackResponse(message),
-          threadId: threadId || `thread_${Date.now()}`,
+          threadId: threadId || `fallback_${Date.now()}`,
+          note: "Using fallback response - OpenAI API key not configured"
         }),
       };
     }
+
+    // Initialize OpenAI client only when API key is available
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
     let thread;
     
