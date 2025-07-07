@@ -102,29 +102,22 @@ const SupportChat: React.FC = () => {
     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
     setAudioChunks([]);
 
-    // Send audio to voice chat function
+    // Convert audio to text using OpenAI Whisper
     const formData = new FormData();
     formData.append('audio', audioBlob, 'recording.webm');
 
     try {
       setIsLoading(true);
-      console.log('Processing voice message...');
-      
       const response = await fetch('/.netlify/functions/voice-chat', {
         method: 'POST',
         body: formData,
       });
 
-      console.log('Voice response status:', response.status);
-      
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Voice response error:', errorText);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Voice response data:', data);
       
       if (data.error) {
         throw new Error(data.error);
@@ -146,7 +139,7 @@ const SupportChat: React.FC = () => {
 
     } catch (error) {
       console.error('Voice processing error:', error);
-      setError(`Failed to process voice message: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setError('Failed to process voice message. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -210,14 +203,6 @@ const SupportChat: React.FC = () => {
     setError(null);
 
     try {
-      console.log('Sending message to assistant:', messageText);
-      console.log('Current threadId:', threadId);
-      
-      // Ensure we send a valid threadId or null
-      const validThreadId = threadId && 
-                           typeof threadId === 'string' && 
-                           threadId.startsWith('thread_') ? threadId : null;
-      
       const response = await fetch('/.netlify/functions/chat', {
         method: 'POST',
         headers: {
@@ -225,31 +210,23 @@ const SupportChat: React.FC = () => {
         },
         body: JSON.stringify({
           message: messageText,
-          threadId: validThreadId,
+          threadId: threadId,
         }),
       });
 
-      console.log('Response status:', response.status);
-      
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Response error:', errorText);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (data.error) {
         throw new Error(data.error);
       }
 
-      // Update thread ID if provided and valid
-      if (data.threadId && 
-          typeof data.threadId === 'string' && 
-          data.threadId.startsWith('thread_')) {
+      // Update thread ID if this is the first message
+      if (data.threadId && !threadId) {
         setThreadId(data.threadId);
-        console.log('Updated threadId to:', data.threadId);
       }
 
       const assistantMessage: Message = {
@@ -275,7 +252,7 @@ const SupportChat: React.FC = () => {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: 'assistant',
-        content: `I'm sorry, I'm having trouble responding right now. Error: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again in a moment.`,
+        content: "I'm sorry, I'm having trouble responding right now. Please try again in a moment, or contact our support team directly if the issue persists.",
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
