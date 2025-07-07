@@ -13,12 +13,19 @@ exports.handler = async (event, context) => {
   console.log('Environment check:');
   console.log('- NODE_ENV:', process.env.NODE_ENV);
   console.log('- NETLIFY_DEV:', process.env.NETLIFY_DEV);
-  console.log('- Available env vars:', Object.keys(process.env).filter(key => key.includes('OPENAI') || key.includes('ASSISTANT')));
-  console.log('- Has OpenAI Key:', !!process.env.OPENAI_API_KEY);
-  console.log('- Key length:', process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.length : 0);
-  console.log('- Key starts with:', process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 7) : 'N/A');
-  console.log('- Has Assistant ID:', !!process.env.OPENAI_ASSISTANT_ID);
-  console.log('- Assistant ID:', process.env.OPENAI_ASSISTANT_ID ? process.env.OPENAI_ASSISTANT_ID.substring(0, 15) + '...' : 'N/A');
+  console.log('- CONTEXT:', process.env.CONTEXT);
+  
+  // Log all environment variables that contain 'OPENAI' or 'ASSISTANT'
+  const relevantEnvVars = Object.keys(process.env).filter(key => 
+    key.includes('OPENAI') || key.includes('ASSISTANT')
+  );
+  console.log('- Relevant env vars found:', relevantEnvVars);
+  
+  // Check each relevant env var
+  relevantEnvVars.forEach(key => {
+    const value = process.env[key];
+    console.log(`- ${key}:`, value ? `${value.substring(0, 10)}...` : 'EMPTY');
+  });
 
   // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
@@ -41,7 +48,7 @@ exports.handler = async (event, context) => {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey || apiKey.trim() === '') {
     console.error('OPENAI_API_KEY not found or empty');
-    console.error('All environment variables:', Object.keys(process.env));
+    console.error('All environment variables:', Object.keys(process.env).sort());
     
     return {
       statusCode: 500,
@@ -52,7 +59,8 @@ exports.handler = async (event, context) => {
           hasKey: !!apiKey,
           keyLength: apiKey ? apiKey.length : 0,
           envVars: Object.keys(process.env).filter(key => key.includes('OPENAI')),
-          context: process.env.CONTEXT || 'unknown'
+          context: process.env.CONTEXT || 'unknown',
+          allEnvKeys: Object.keys(process.env).sort()
         }
       }),
     };
@@ -71,10 +79,12 @@ exports.handler = async (event, context) => {
         debug: {
           hasAssistantId: !!assistantId,
           envVars: Object.keys(process.env).filter(key => key.includes('ASSISTANT')),
+          allEnvKeys: Object.keys(process.env).sort()
         }
        }),
     };
   }
+
   try {
     const { message, threadId } = JSON.parse(event.body || '{}');
     console.log('Parsed request:', { 
@@ -124,7 +134,7 @@ exports.handler = async (event, context) => {
     });
 
     // Run the assistant
-    console.log('Running assistant:', ASSISTANT_ID);
+    console.log('Running assistant:', assistantId);
     const run = await openai.beta.threads.runs.create(currentThreadId, {
       assistant_id: assistantId.trim(),
     });
@@ -203,7 +213,6 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ 
         error: 'Failed to get response from OpenAI assistant',
         details: error.message,
-        assistant_id: assistantId,
         debug: 'Check Netlify function logs for details'
       }),
     };
