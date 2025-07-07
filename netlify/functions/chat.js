@@ -13,7 +13,7 @@ const openai = new OpenAI({
 });
 
 // Your custom assistant ID
-const ASSISTANT_ID = 'asst_abc123'; // Replace with your actual assistant ID
+const ASSISTANT_ID = 'asst_iZFLhw33e3RWkihX9Zw23uX0';
 
 exports.handler = async (event, context) => {
   // Handle preflight requests
