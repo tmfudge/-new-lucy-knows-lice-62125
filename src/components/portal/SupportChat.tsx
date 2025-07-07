@@ -211,6 +211,7 @@ const SupportChat: React.FC = () => {
 
     try {
       console.log('Sending message to assistant:', messageText);
+      console.log('Current threadId:', threadId);
       
       const response = await fetch('/.netlify/functions/chat', {
         method: 'POST',
@@ -219,7 +220,7 @@ const SupportChat: React.FC = () => {
         },
         body: JSON.stringify({
           message: messageText,
-          threadId: threadId,
+          threadId: threadId || null, // Ensure we send null instead of undefined
         }),
       });
 

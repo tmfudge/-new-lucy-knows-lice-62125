@@ -48,7 +48,8 @@ exports.handler = async (event, context) => {
 
   try {
     const { message, threadId } = JSON.parse(event.body || '{}');
-    console.log('Parsed request:', { message: message?.substring(0, 50), threadId });
+    console.log('Raw request body:', event.body);
+    console.log('Parsed request:', { message: message?.substring(0, 50), threadId, threadIdType: typeof threadId });
 
     if (!message) {
       return {
@@ -65,7 +66,13 @@ exports.handler = async (event, context) => {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
+    // Fix thread ID handling - convert string 'undefined' or 'null' to actual null
     let currentThreadId = threadId;
+    if (!currentThreadId || currentThreadId === 'undefined' || currentThreadId === 'null' || currentThreadId === '') {
+      currentThreadId = null;
+    }
+
+    console.log('Processed threadId:', currentThreadId);
 
     // Create a new thread if we don't have one
     if (!currentThreadId) {
@@ -73,6 +80,8 @@ exports.handler = async (event, context) => {
       const thread = await openai.beta.threads.create();
       currentThreadId = thread.id;
       console.log('Created thread:', currentThreadId);
+    } else {
+      console.log('Using existing thread:', currentThreadId);
     }
 
     // Add the user's message to the thread
