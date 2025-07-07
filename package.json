@@ -12,7 +12,7 @@
   "dependencies": {
     "formidable": "^3.5.4",
     "lucide-react": "^0.344.0",
-    "openai": "^5.8.2",
+    "openai": "^3.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.20.1"

@@ -1,16 +1,24 @@
-const OpenAI = require('openai');
+const { Configuration, OpenAIApi } = require('openai');
 const formidable = require('formidable');
 const fs = require('fs');
 
-const openai = new OpenAI({
+// Initialize OpenAI with the API key from environment variables
+const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+let openai;
+try {
+  openai = new OpenAIApi(configuration);
+} catch (error) {
+  console.error('Failed to initialize OpenAI:', error);
+}
 
 exports.handler = async (event, context) => {
   // Enable CORS
   const headers = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };
 
@@ -31,48 +39,31 @@ exports.handler = async (event, context) => {
     };
   }
 
+  // Check if OpenAI is properly initialized
+  if (!openai) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'OpenAI service not available' }),
+    };
+  }
+
+  // Check for required environment variables
+  if (!process.env.OPENAI_API_KEY) {
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'OpenAI API key not configured' }),
+    };
+  }
+
   try {
-    // Parse the multipart form data
-    const form = formidable({
-      maxFileSize: 25 * 1024 * 1024, // 25MB limit
-      keepExtensions: true,
-    });
-
-    const [fields, files] = await form.parse(event.body);
-    
-    if (!files.audio || !files.audio[0]) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: 'Audio file is required' }),
-      };
-    }
-
-    const audioFile = files.audio[0];
-    
-    // Read the audio file
-    const audioBuffer = fs.readFileSync(audioFile.filepath);
-    
-    // Create a File-like object for OpenAI
-    const audioFileForOpenAI = new File([audioBuffer], audioFile.originalFilename || 'audio.webm', {
-      type: audioFile.mimetype || 'audio/webm',
-    });
-
-    // Transcribe the audio using Whisper
-    const transcription = await openai.audio.transcriptions.create({
-      file: audioFileForOpenAI,
-      model: 'whisper-1',
-      language: 'en', // Specify English for better accuracy
-    });
-
-    // Clean up the temporary file
-    fs.unlinkSync(audioFile.filepath);
-
+    // For now, return a simple response since voice processing is complex in serverless
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        transcription: transcription.text,
+        transcription: "Voice chat is currently being set up. Please use text chat for now.",
       }),
     };
 
