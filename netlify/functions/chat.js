@@ -10,6 +10,15 @@ const headers = {
 exports.handler = async (event, context) => {
   console.log('=== CHAT FUNCTION CALLED ===');
   console.log('Method:', event.httpMethod);
+  
+  // Check if we're in Netlify environment
+  console.log('=== NETLIFY ENVIRONMENT CHECK ===');
+  console.log('- NETLIFY:', process.env.NETLIFY);
+  console.log('- NETLIFY_DEV:', process.env.NETLIFY_DEV);
+  console.log('- CONTEXT:', process.env.CONTEXT);
+  console.log('- DEPLOY_PRIME_URL:', process.env.DEPLOY_PRIME_URL);
+  console.log('- URL:', process.env.URL);
+  
   console.log('Environment check:');
   console.log('- NODE_ENV:', process.env.NODE_ENV);
   console.log('- NETLIFY_DEV:', process.env.NETLIFY_DEV);
@@ -19,6 +28,11 @@ exports.handler = async (event, context) => {
   const relevantEnvVars = Object.keys(process.env).filter(key => 
     key.includes('OPENAI') || key.includes('ASSISTANT')
   );
+  
+  // Also check for any variables that might be prefixed
+  const allPossibleKeys = Object.keys(process.env).filter(key => 
+    key.includes('OPENAI') || key.includes('ASSISTANT')
+  );
   console.log('- Relevant env vars found:', relevantEnvVars);
   
   // Check each relevant env var
@@ -26,6 +40,15 @@ exports.handler = async (event, context) => {
     const value = process.env[key];
     console.log(`- ${key}:`, value ? `${value.substring(0, 10)}...` : 'EMPTY');
   });
+  
+  // Check for common variations
+  const variations = [
+    'OPENAI_API_KEY',
+    'OPENAI_ASSISTANT_ID',
+    'REACT_APP_OPENAI_API_KEY',
+    'VITE_OPENAI_API_KEY'
+  ];
+  console.log('Checking variations:', variations.map(key => `${key}: ${process.env[key] ? 'EXISTS' : 'MISSING'}`));
 
   // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
