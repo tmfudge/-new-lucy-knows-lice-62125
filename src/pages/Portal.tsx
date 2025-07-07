@@ -28,7 +28,7 @@ export type PortalSection =
 
 function PortalContent() {
   const [activeSection, setActiveSection] = useState<PortalSection>('dashboard');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open on desktop
 
   const renderContent = () => {
     switch (activeSection) {
@@ -70,7 +70,7 @@ function PortalContent() {
       
       <div className="flex-1 flex flex-col lg:ml-64">
         {/* Mobile header */}
-        <div className="lg:hidden bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
+        <div className="lg:hidden bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between sticky top-0 z-30">
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-md text-gray-600 hover:bg-gray-100"
@@ -91,6 +91,18 @@ function PortalContent() {
         <main className="flex-1 overflow-y-auto">
           {renderContent()}
         </main>
+      </div>
+      
+      {/* Desktop sidebar toggle for debugging */}
+      <div className="hidden lg:block fixed top-4 left-4 z-50">
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="bg-orange-500 text-white p-2 rounded-lg shadow-lg hover:bg-orange-600 transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
       </div>
     </div>
   );
