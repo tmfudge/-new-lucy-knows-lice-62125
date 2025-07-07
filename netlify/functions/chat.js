@@ -11,6 +11,11 @@ const headers = {
 const ASSISTANT_ID = 'asst_iZFLhw33e3RWkihX9Zw23uX0';
 
 exports.handler = async (event, context) => {
+  console.log('=== CHAT FUNCTION CALLED ===');
+  console.log('Method:', event.httpMethod);
+  console.log('Has OpenAI Key:', !!process.env.OPENAI_API_KEY);
+  console.log('Assistant ID:', ASSISTANT_ID);
+
   // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -28,23 +33,28 @@ exports.handler = async (event, context) => {
     };
   }
 
+  // Check if OpenAI API key is available FIRST
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('OPENAI_API_KEY not found in environment variables');
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ 
+        error: 'OpenAI API key not configured. Please set OPENAI_API_KEY environment variable in Netlify dashboard.',
+        debug: 'No API key found'
+      }),
+    };
+  }
+
   try {
     const { message, threadId } = JSON.parse(event.body || '{}');
+    console.log('Parsed request:', { message: message?.substring(0, 50), threadId });
 
     if (!message) {
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({ error: 'Message is required' }),
-      };
-    }
-
-    // Check if OpenAI API key is available
-    if (!process.env.OPENAI_API_KEY) {
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ error: 'OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.' }),
       };
     }
 
@@ -88,9 +98,11 @@ exports.handler = async (event, context) => {
     while ((runStatus.status === 'queued' || runStatus.status === 'in_progress') && attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       runStatus = await openai.beta.threads.runs.retrieve(currentThreadId, run.id);
-      console.log('Run status:', runStatus.status);
+      console.log('Run status:', runStatus.status, 'Attempt:', attempts + 1);
       attempts++;
     }
+
+    console.log('Final run status:', runStatus.status);
 
     if (runStatus.status === 'completed') {
       // Get the assistant's response
@@ -100,7 +112,7 @@ exports.handler = async (event, context) => {
       
       if (assistantMessage && assistantMessage.content[0] && assistantMessage.content[0].type === 'text') {
         const response = assistantMessage.content[0].text.value;
-        console.log('Assistant response received');
+        console.log('Assistant response received, length:', response.length);
         
         return {
           statusCode: 200,
@@ -111,19 +123,25 @@ exports.handler = async (event, context) => {
           }),
         };
       } else {
+        console.error('No valid response from assistant');
         throw new Error('No valid response from assistant');
       }
     } else if (runStatus.status === 'failed') {
       console.error('Run failed:', runStatus.last_error);
       throw new Error(`Assistant run failed: ${runStatus.last_error?.message || 'Unknown error'}`);
     } else if (runStatus.status === 'expired') {
+      console.error('Run expired');
       throw new Error('Assistant run expired - took too long to complete');
     } else {
+      console.error('Unexpected run status:', runStatus.status);
       throw new Error(`Assistant run ended with status: ${runStatus.status}`);
     }
 
   } catch (error) {
-    console.error('Chat function error:', error);
+    console.error('=== CHAT FUNCTION ERROR ===');
+    console.error('Error type:', error.constructor.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
     
     return {
       statusCode: 500,
@@ -131,7 +149,8 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ 
         error: 'Failed to get response from OpenAI assistant',
         details: error.message,
-        assistant_id: ASSISTANT_ID
+        assistant_id: ASSISTANT_ID,
+        debug: 'Check Netlify function logs for details'
       }),
     };
   }
