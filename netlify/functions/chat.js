@@ -1,4 +1,4 @@
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 
 // CORS headers
 const headers = {
@@ -7,8 +7,57 @@ const headers = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-// Handle preflight requests
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// System prompt for Lucy's AI assistant
+const SYSTEM_PROMPT = `You are Lucy's AI assistant, a specialized chatbot designed to help parents with head lice treatment questions. You have been trained on the Lucy Knows Lice Survival Kit educational materials and evidence-based lice treatment methods.
+
+Your personality:
+- Warm, supportive, and understanding
+- Knowledgeable but not medical advice-giving
+- Practical and solution-focused
+- Reassuring to stressed parents
+
+Your knowledge base includes:
+- Enzyme-based lice treatment protocols
+- Systematic wet combing techniques
+- 21-day recheck schedules
+- Family screening procedures
+- Cleaning and prevention methods
+- Common myths vs. reality about lice
+- When to worry vs. when to stay calm
+- Resistance rates of common treatments
+
+Key facts you know:
+- Up to 65% of lice are resistant to drugstore treatments
+- Only 57.5% of suspected cases are correctly identified
+- Lice prefer clean hair and affect 1 in 4 kids
+- The enzyme method works by dissolving nit cement
+- Critical recheck days are Day 3, 7, and 14
+- Lice can only survive 24-48 hours off the human head
+
+Always:
+- Provide specific, actionable guidance
+- Reference the survival kit materials when relevant
+- Remind parents this is educational information, not medical advice
+- Be encouraging and reduce panic
+- Ask clarifying questions when helpful
+
+Never:
+- Provide medical diagnoses
+- Recommend specific medications
+- Give advice about other types of lice (body/pubic)
+- Make guarantees about treatment outcomes
+
+If asked about medical concerns, allergic reactions, or signs of infection, always recommend consulting a healthcare provider.
+
+Respond in a conversational, helpful tone as if you're a knowledgeable friend who has successfully helped many families through lice treatment.`;
+
 exports.handler = async (event, context) => {
+  // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -36,34 +85,76 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // For now, return a helpful response about lice treatment
-    // This simulates an AI assistant trained on lice treatment
-    const response = generateLiceResponse(message);
+    // Check if OpenAI API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      console.log('OpenAI API key not found, using fallback response');
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          response: generateFallbackResponse(message),
+          threadId: threadId || `thread_${Date.now()}`,
+        }),
+      };
+    }
+
+    // Create or continue conversation thread
+    let thread;
+    if (threadId && threadId.startsWith('thread_')) {
+      // For now, we'll use a simple conversation approach
+      // In production, you might want to use OpenAI Assistants API for persistent threads
+      thread = { id: threadId };
+    } else {
+      thread = { id: `thread_${Date.now()}` };
+    }
+
+    // Create chat completion
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini", // Using the latest efficient model
+      messages: [
+        {
+          role: "system",
+          content: SYSTEM_PROMPT
+        },
+        {
+          role: "user",
+          content: message
+        }
+      ],
+      max_tokens: 500,
+      temperature: 0.7,
+    });
+
+    const response = completion.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response. Please try again.";
 
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
         response: response,
-        threadId: threadId || `thread_${Date.now()}`,
+        threadId: thread.id,
       }),
     };
 
   } catch (error) {
     console.error('Chat function error:', error);
     
+    // If OpenAI fails, fall back to static responses
+    const { message } = JSON.parse(event.body || '{}');
+    
     return {
-      statusCode: 500,
+      statusCode: 200,
       headers,
-      body: JSON.stringify({ 
-        error: 'Internal server error',
-        details: error.message
+      body: JSON.stringify({
+        response: generateFallbackResponse(message || ''),
+        threadId: `thread_${Date.now()}`,
+        note: "Using fallback response due to API issue"
       }),
     };
   }
 };
 
-function generateLiceResponse(message) {
+function generateFallbackResponse(message) {
   const lowerMessage = message.toLowerCase();
   
   // Treatment effectiveness questions
@@ -112,5 +203,5 @@ function generateLiceResponse(message) {
   }
   
   // Default helpful response
-  return "I'm here to help with your lice treatment questions! I can provide guidance on treatment effectiveness, when to retreat, family screening, cleaning protocols, and managing the stress of dealing with lice. What specific aspect of lice treatment would you like to know more about? Remember, if you have medical concerns or see signs of infection, always consult with your healthcare provider.";
+  return "I'm Lucy's AI assistant, specially trained to help with lice treatment questions! I can provide guidance on treatment effectiveness, when to retreat, family screening, cleaning protocols, and managing the stress of dealing with lice. What specific aspect of lice treatment would you like to know more about? Remember, if you have medical concerns or see signs of infection, always consult with your healthcare provider.";
 }
