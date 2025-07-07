@@ -13,8 +13,13 @@ const ASSISTANT_ID = 'asst_iZFLhw33e3RWkihX9Zw23uX0';
 exports.handler = async (event, context) => {
   console.log('=== CHAT FUNCTION CALLED ===');
   console.log('Method:', event.httpMethod);
-  console.log('Has OpenAI Key:', !!process.env.OPENAI_API_KEY);
-  console.log('Assistant ID:', ASSISTANT_ID);
+  console.log('Environment check:');
+  console.log('- NODE_ENV:', process.env.NODE_ENV);
+  console.log('- NETLIFY_DEV:', process.env.NETLIFY_DEV);
+  console.log('- Available env vars:', Object.keys(process.env).filter(key => key.includes('OPENAI')));
+  console.log('- Has OpenAI Key:', !!process.env.OPENAI_API_KEY);
+  console.log('- Key length:', process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.length : 0);
+  console.log('- Key starts with:', process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 7) : 'N/A');
 
   // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
@@ -33,23 +38,34 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Check if OpenAI API key is available FIRST
-  if (!process.env.OPENAI_API_KEY) {
-    console.error('OPENAI_API_KEY not found in environment variables');
+  // Check if OpenAI API key is available
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || apiKey.trim() === '') {
+    console.error('OPENAI_API_KEY not found or empty');
+    console.error('All environment variables:', Object.keys(process.env));
+    
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
-        error: 'OpenAI API key not configured. Please set OPENAI_API_KEY environment variable in Netlify dashboard.',
-        debug: 'No API key found'
+        error: 'OpenAI API key not configured. Please check environment variables.',
+        debug: {
+          hasKey: !!apiKey,
+          keyLength: apiKey ? apiKey.length : 0,
+          envVars: Object.keys(process.env).filter(key => key.includes('OPENAI')),
+          context: process.env.CONTEXT || 'unknown'
+        }
       }),
     };
   }
 
   try {
     const { message, threadId } = JSON.parse(event.body || '{}');
-    console.log('Raw request body:', event.body);
-    console.log('Parsed request:', { message: message?.substring(0, 50), threadId, threadIdType: typeof threadId });
+    console.log('Parsed request:', { 
+      message: message?.substring(0, 50), 
+      threadId, 
+      threadIdType: typeof threadId 
+    });
 
     if (!message) {
       return {
@@ -63,10 +79,10 @@ exports.handler = async (event, context) => {
     
     // Initialize OpenAI client
     const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: apiKey.trim(),
     });
 
-    // Fix thread ID handling - convert string 'undefined' or 'null' to actual null
+    // Fix thread ID handling
     let currentThreadId = threadId;
     if (!currentThreadId || currentThreadId === 'undefined' || currentThreadId === 'null' || currentThreadId === '') {
       currentThreadId = null;
@@ -151,6 +167,19 @@ exports.handler = async (event, context) => {
     console.error('Error type:', error.constructor.name);
     console.error('Error message:', error.message);
     console.error('Error stack:', error.stack);
+    
+    // Check if it's an API key issue
+    if (error.message.includes('401') || error.message.includes('authentication')) {
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ 
+          error: 'OpenAI API authentication failed. Please check your API key.',
+          details: error.message,
+          debug: 'API key may be invalid or expired'
+        }),
+      };
+    }
     
     return {
       statusCode: 500,
