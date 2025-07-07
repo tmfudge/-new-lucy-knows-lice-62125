@@ -1,16 +1,8 @@
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 
-// Initialize OpenAI with the API key from environment variables
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-let openai;
-try {
-  openai = new OpenAIApi(configuration);
-} catch (error) {
-  console.error('Failed to initialize OpenAI:', error);
-}
 
 const ASSISTANT_ID = process.env.OPENAI_ASSISTANT_ID;
 
@@ -39,17 +31,9 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Check if OpenAI is properly initialized
-  if (!openai) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: 'OpenAI service not available' }),
-    };
-  }
-
   // Check for required environment variables
   if (!process.env.OPENAI_API_KEY) {
+    console.error('Missing OPENAI_API_KEY environment variable');
     return {
       statusCode: 500,
       headers,
@@ -58,6 +42,7 @@ exports.handler = async (event, context) => {
   }
 
   if (!ASSISTANT_ID) {
+    console.error('Missing OPENAI_ASSISTANT_ID environment variable');
     return {
       statusCode: 500,
       headers,
@@ -80,41 +65,49 @@ exports.handler = async (event, context) => {
 
     // Create a new thread if none exists
     if (!currentThreadId) {
-      const thread = await openai.createThread();
-      currentThreadId = thread.data.id;
+      console.log('Creating new thread...');
+      const thread = await openai.beta.threads.create();
+      currentThreadId = thread.id;
+      console.log('Created thread:', currentThreadId);
     }
 
     // Add the user's message to the thread
-    await openai.createMessage(currentThreadId, {
+    console.log('Adding message to thread:', currentThreadId);
+    await openai.beta.threads.messages.create(currentThreadId, {
       role: 'user',
       content: message,
     });
 
     // Run the assistant
-    const run = await openai.createRun(currentThreadId, {
+    console.log('Starting assistant run...');
+    const run = await openai.beta.threads.runs.create(currentThreadId, {
       assistant_id: ASSISTANT_ID,
     });
 
     // Wait for the run to complete
-    let runStatus = await openai.retrieveRun(currentThreadId, run.data.id);
+    let runStatus = await openai.beta.threads.runs.retrieve(currentThreadId, run.id);
     
     let attempts = 0;
     const maxAttempts = 30; // 30 seconds timeout
     
-    while ((runStatus.data.status === 'in_progress' || runStatus.data.status === 'queued') && attempts < maxAttempts) {
+    console.log('Waiting for run to complete...');
+    while ((runStatus.status === 'in_progress' || runStatus.status === 'queued') && attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      runStatus = await openai.retrieveRun(currentThreadId, run.data.id);
+      runStatus = await openai.beta.threads.runs.retrieve(currentThreadId, run.id);
       attempts++;
+      console.log(`Run status: ${runStatus.status}, attempt: ${attempts}`);
     }
 
-    if (runStatus.data.status === 'completed') {
+    if (runStatus.status === 'completed') {
+      console.log('Run completed, fetching messages...');
       // Get the assistant's response
-      const messages = await openai.listMessages(currentThreadId);
-      const assistantMessage = messages.data.data.find(
-        msg => msg.role === 'assistant' && msg.run_id === run.data.id
+      const messages = await openai.beta.threads.messages.list(currentThreadId);
+      const assistantMessage = messages.data.find(
+        msg => msg.role === 'assistant' && msg.run_id === run.id
       );
 
       if (assistantMessage && assistantMessage.content[0]?.type === 'text') {
+        console.log('Returning assistant response');
         return {
           statusCode: 200,
           headers,
@@ -123,17 +116,25 @@ exports.handler = async (event, context) => {
             threadId: currentThreadId,
           }),
         };
+      } else {
+        console.error('No valid assistant message found');
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ error: 'No valid response from assistant' }),
+        };
       }
     }
 
     // Handle failed runs
+    console.error('Run failed with status:', runStatus.status);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
         error: 'Assistant run failed',
-        status: runStatus.data.status,
-        details: runStatus.data.last_error || 'Unknown error'
+        status: runStatus.status,
+        details: runStatus.last_error || 'Unknown error'
       }),
     };
 
@@ -142,10 +143,11 @@ exports.handler = async (event, context) => {
     
     // Provide more specific error information
     let errorMessage = 'Internal server error';
-    if (error.response) {
-      errorMessage = `OpenAI API error: ${error.response.status} - ${error.response.data?.error?.message || 'Unknown API error'}`;
-    } else if (error.message) {
-      errorMessage = error.message;
+    let errorDetails = error.message;
+    
+    if (error.status) {
+      errorMessage = `OpenAI API error: ${error.status}`;
+      errorDetails = error.message || 'Unknown API error';
     }
     
     return {
@@ -153,7 +155,7 @@ exports.handler = async (event, context) => {
       headers,
       body: JSON.stringify({ 
         error: errorMessage,
-        details: error.message 
+        details: errorDetails
       }),
     };
   }

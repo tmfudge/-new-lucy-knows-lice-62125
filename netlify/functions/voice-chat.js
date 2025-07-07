@@ -1,18 +1,8 @@
-const { Configuration, OpenAIApi } = require('openai');
-const formidable = require('formidable');
-const fs = require('fs');
+const OpenAI = require('openai');
 
-// Initialize OpenAI with the API key from environment variables
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-let openai;
-try {
-  openai = new OpenAIApi(configuration);
-} catch (error) {
-  console.error('Failed to initialize OpenAI:', error);
-}
 
 exports.handler = async (event, context) => {
   // Enable CORS
@@ -36,15 +26,6 @@ exports.handler = async (event, context) => {
       statusCode: 405,
       headers,
       body: JSON.stringify({ error: 'Method not allowed' }),
-    };
-  }
-
-  // Check if OpenAI is properly initialized
-  if (!openai) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: 'OpenAI service not available' }),
     };
   }
 
