@@ -1,11 +1,11 @@
-exports.handler = async (event, context) => {
-  // Enable CORS
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  };
+// CORS headers
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
 
+exports.handler = async (event, context) => {
   // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
     return {
@@ -24,11 +24,14 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    // For now, return a simple transcription simulation
+    // In a full implementation, this would use OpenAI Whisper API
+    
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        transcription: "Voice chat is currently being set up. Please use text chat for now.",
+        transcription: "I heard your voice message. Voice transcription is being set up - for now, please use text chat for the best experience with Lucy's AI assistant.",
       }),
     };
 
