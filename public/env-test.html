@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environment Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; }
+        button { padding: 10px 20px; font-size: 16px; margin: 10px 0; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Environment Variables Test</h1>
+    <button onclick="runTest()">Run Test</button>
+    <div id="results"></div>
+
+    <script>
+        async function runTest() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Testing...</p>';
+            
+            try {
+                // Test the debug function
+                const response = await fetch('/.netlify/functions/debug-env');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                results.innerHTML = `
+                    <div class="status ${data.hasOpenAIKey && data.hasAssistantId ? 'success' : 'error'}">
+                        <h3>Environment Status:</h3>
+                        <p><strong>OpenAI API Key:</strong> ${data.hasOpenAIKey ? '✅ Found' : '❌ Missing'}</p>
+                        <p><strong>Assistant ID:</strong> ${data.hasAssistantId ? '✅ Found' : '❌ Missing'}</p>
+                        <p><strong>Context:</strong> ${data.netlifyContext}</p>
+                    </div>
+                    <details>
+                        <summary>Full Debug Info</summary>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </details>
+                `;
+                
+                // If env vars are found, test the chat function
+                if (data.hasOpenAIKey && data.hasAssistantId) {
+                    testChat();
+                }
+                
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="status error">
+                        <h3>Test Failed:</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testChat() {
+            try {
+                const response = await fetch('/.netlify/functions/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: 'Hello, this is a test',
+                        threadId: null
+                    })
+                });
+                
+                const data = await response.json();
+                
+                const chatResult = document.createElement('div');
+                chatResult.className = `status ${response.ok ? 'success' : 'error'}`;
+                chatResult.innerHTML = `
+                    <h3>Chat Function Test:</h3>
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Response:</strong> ${data.response || data.error}</p>
+                `;
+                
+                document.getElementById('results').appendChild(chatResult);
+                
+            } catch (error) {
+                const chatResult = document.createElement('div');
+                chatResult.className = 'status error';
+                chatResult.innerHTML = `
+                    <h3>Chat Test Failed:</h3>
+                    <p>${error.message}</p>
+                `;
+                document.getElementById('results').appendChild(chatResult);
+            }
+        }
+    </script>
+</body>
+</html>
