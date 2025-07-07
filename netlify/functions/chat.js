@@ -12,49 +12,8 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// System prompt for Lucy's AI assistant
-const SYSTEM_PROMPT = `You are Lucy's AI assistant, a specialized chatbot designed to help parents with head lice treatment questions. You have been trained on the Lucy Knows Lice Survival Kit educational materials and evidence-based lice treatment methods.
-
-Your personality:
-- Warm, supportive, and understanding
-- Knowledgeable but not medical advice-giving
-- Practical and solution-focused
-- Reassuring to stressed parents
-
-Your knowledge base includes:
-- Enzyme-based lice treatment protocols
-- Systematic wet combing techniques
-- 21-day recheck schedules
-- Family screening procedures
-- Cleaning and prevention methods
-- Common myths vs. reality about lice
-- When to worry vs. when to stay calm
-- Resistance rates of common treatments
-
-Key facts you know:
-- Up to 65% of lice are resistant to drugstore treatments
-- Only 57.5% of suspected cases are correctly identified
-- Lice prefer clean hair and affect 1 in 4 kids
-- The enzyme method works by dissolving nit cement
-- Critical recheck days are Day 3, 7, and 14
-- Lice can only survive 24-48 hours off the human head
-
-Always:
-- Provide specific, actionable guidance
-- Reference the survival kit materials when relevant
-- Remind parents this is educational information, not medical advice
-- Be encouraging and reduce panic
-- Ask clarifying questions when helpful
-
-Never:
-- Provide medical diagnoses
-- Recommend specific medications
-- Give advice about other types of lice (body/pubic)
-- Make guarantees about treatment outcomes
-
-If asked about medical concerns, allergic reactions, or signs of infection, always recommend consulting a healthcare provider.
-
-Respond in a conversational, helpful tone as if you're a knowledgeable friend who has successfully helped many families through lice treatment.`;
+// Your custom assistant ID
+const ASSISTANT_ID = 'asst_abc123'; // Replace with your actual assistant ID
 
 exports.handler = async (event, context) => {
   // Handle preflight requests
@@ -98,43 +57,77 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Create or continue conversation thread
     let thread;
+    
+    // Create or retrieve thread
     if (threadId && threadId.startsWith('thread_')) {
-      // For now, we'll use a simple conversation approach
-      // In production, you might want to use OpenAI Assistants API for persistent threads
-      thread = { id: threadId };
+      try {
+        // Try to retrieve existing thread
+        thread = await openai.beta.threads.retrieve(threadId);
+        console.log('Retrieved existing thread:', threadId);
+      } catch (error) {
+        console.log('Thread not found, creating new one');
+        thread = await openai.beta.threads.create();
+      }
     } else {
-      thread = { id: `thread_${Date.now()}` };
+      // Create new thread
+      thread = await openai.beta.threads.create();
+      console.log('Created new thread:', thread.id);
     }
 
-    // Create chat completion
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Using the latest efficient model
-      messages: [
-        {
-          role: "system",
-          content: SYSTEM_PROMPT
-        },
-        {
-          role: "user",
-          content: message
-        }
-      ],
-      max_tokens: 500,
-      temperature: 0.7,
+    // Add message to thread
+    await openai.beta.threads.messages.create(thread.id, {
+      role: "user",
+      content: message
     });
 
-    const response = completion.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response. Please try again.";
+    // Run the assistant
+    const run = await openai.beta.threads.runs.create(thread.id, {
+      assistant_id: ASSISTANT_ID,
+    });
 
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        response: response,
-        threadId: thread.id,
-      }),
-    };
+    // Wait for completion
+    let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+    
+    // Poll for completion (with timeout)
+    let attempts = 0;
+    const maxAttempts = 30; // 30 seconds timeout
+    
+    while (runStatus.status === 'queued' || runStatus.status === 'in_progress') {
+      if (attempts >= maxAttempts) {
+        throw new Error('Assistant response timeout');
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+      attempts++;
+    }
+
+    if (runStatus.status === 'completed') {
+      // Get the assistant's response
+      const messages = await openai.beta.threads.messages.list(thread.id);
+      const assistantMessage = messages.data.find(msg => msg.role === 'assistant' && msg.run_id === run.id);
+      
+      if (assistantMessage && assistantMessage.content[0]?.type === 'text') {
+        const response = assistantMessage.content[0].text.value;
+        
+        return {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify({
+            response: response,
+            threadId: thread.id,
+          }),
+        };
+      } else {
+        throw new Error('No valid response from assistant');
+      }
+    } else if (runStatus.status === 'failed') {
+      console.error('Assistant run failed:', runStatus.last_error);
+      throw new Error(`Assistant run failed: ${runStatus.last_error?.message || 'Unknown error'}`);
+    } else {
+      throw new Error(`Unexpected run status: ${runStatus.status}`);
+    }
 
   } catch (error) {
     console.error('Chat function error:', error);
@@ -147,8 +140,9 @@ exports.handler = async (event, context) => {
       headers,
       body: JSON.stringify({
         response: generateFallbackResponse(message || ''),
-        threadId: `thread_${Date.now()}`,
-        note: "Using fallback response due to API issue"
+        threadId: `fallback_${Date.now()}`,
+        note: "Using fallback response due to API issue",
+        error: error.message
       }),
     };
   }
