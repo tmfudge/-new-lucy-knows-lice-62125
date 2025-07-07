@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import Terms from './pages/Terms';
-// import Portal from './pages/Portal';
+import Portal from './pages/Portal';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         <Route path="/disclaimers" element={<Terms />} />
         <Route path="/legal" element={<Terms />} />
         {/* Portal route commented out - will reactivate when ready for portal launch */}
-        {/* <Route path="/portal/*" element={<Portal />} /> */}
+        <Route path="/portal/*" element={<Portal />} />
       </Routes>
     </Router>
   );
